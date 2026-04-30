@@ -43,6 +43,33 @@ const emails = [
         body: "Dear User,\n\nWe detect unusual activity on your account. Your account has been limited until you verify your identity.\n\nPlease login your account to restore access.\n\nThanks,\nPayPal Support",
         isPhish: true,
         explanation: "Phishing! 'friday' is uncapitalized. Grammatical errors like 'We detect' instead of 'We have detected' and 'login your account' instead of 'log in to your account' indicate ESL phrasing. The domain is also suspicious."
+    },
+    {
+        sender: "kundenservice@sparkasse-sicherheit.de",
+        recipient: "kunde@beispiel.de",
+        subject: "Wichtige Mitteilung: Ihr Konto wurde vorübergehend gesperrt",
+        date: "dienstag, 12 Mai",
+        body: "Sehr geehrter Kunde,\n\nWir haben ungewöhnliche Aktivitäten auf Ihrem Konto festgestellt. Ihr Konto wurde aus Sicherheitsgründen eingeschränkt.\n\nBitte klicken Sie auf den untenstehenden Link, um Ihre Daten zu bestätigen und Ihr Konto zu entsperren.\n\nMit freundlichen Grüßen,\nSparkasse Kundenservice",
+        isPhish: true,
+        explanation: "Phishing! 'dienstag' is uncapitalized (in German, days of the week are capitalized). The domain 'sparkasse-sicherheit.de' is suspicious. The generic greeting 'Sehr geehrter Kunde' instead of a personalized name, combined with a link to unlock the account, is a classic phishing tactic."
+    },
+    {
+        sender: "recursos.humanos@empresa.com",
+        recipient: "empleado@empresa.com",
+        subject: "Recordatorio: Evaluación de Desempeño",
+        date: "Miércoles, 14 Jun",
+        body: "Hola equipo,\n\nEste es un recordatorio de que las evaluaciones de desempeño anuales deben completarse para el final de esta semana. Por favor, asegúrense de subir sus formularios al portal interno de la empresa.\n\nSaludos,\nRecursos Humanos",
+        isPhish: false,
+        explanation: "Legitimate! The email uses proper capitalization, standard professional communication, and directs users to an internal portal rather than clicking an external link."
+    },
+    {
+        sender: "info@posta-shqiptare-al.com",
+        recipient: "qytetar@example.al",
+        subject: "Pakoja juaj po pret dorëzimin",
+        date: "E hënë, 3 Shtator",
+        body: "I dashur klient,\n\nPakoja juaj nuk mund të dorëzohej për shkak të adresës së pasaktë. Ju lutemi klikoni këtu për të përditësuar informacionin tuaj dhe për të paguar tarifën e ridërgesës prej 150 LEK.\n\nFaleminderit,\nPosta Shqiptare",
+        isPhish: true,
+        explanation: "Phishing! This is a classic package delivery scam. The domain 'posta-shqiptare-al.com' is fake (the real one is postashqiptare.al). The greeting 'I dashur klient' is generic, and the email requests a small fee (150 LEK) via a direct link, which legitimate postal services typically do not do via email."
     }
 ];
 
