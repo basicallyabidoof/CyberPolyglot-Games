@@ -1,0 +1,168 @@
+:root {
+    --bg-color: #f4f7f6;
+    --text-color: #333;
+    --email-bg: #fff;
+    --primary-color: #2c3e50;
+    --border-color: #ddd;
+    --legit-color: #27ae60;
+    --phish-color: #e74c3c;
+    --hover-darken: rgba(0, 0, 0, 0.1);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.game-container {
+    max-width: 800px;
+    width: 100%;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px 8px 0 0;
+}
+
+.score-board {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.score-board span {
+    margin-left: 15px;
+}
+
+main {
+    background-color: var(--email-bg);
+    padding: 20px;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.instruction-panel {
+    background-color: #e8f4f8;
+    padding: 15px;
+    border-left: 4px solid #3498db;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.email-client {
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.email-header {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.email-row {
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+}
+
+.email-row:last-child {
+    margin-bottom: 0;
+}
+
+.email-body {
+    padding: 20px;
+    min-height: 200px;
+    white-space: pre-wrap;
+    line-height: 1.5;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.btn {
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: white;
+    transition: background-color 0.2s;
+}
+
+.btn-legit {
+    background-color: var(--legit-color);
+}
+
+.btn-legit:hover {
+    background-color: #219653;
+}
+
+.btn-phish {
+    background-color: var(--phish-color);
+}
+
+.btn-phish:hover {
+    background-color: #c0392b;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.modal-content h2 {
+    margin-bottom: 15px;
+}
+
+.modal-content p {
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+#btn-next {
+    background-color: var(--primary-color);
+}
+
+#btn-next:hover {
+    background-color: #1a252f;
+}
