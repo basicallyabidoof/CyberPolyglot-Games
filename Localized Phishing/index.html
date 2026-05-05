@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phish Catchers: Localized Edition</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <h1>Phish Catchers: Localized Edition</h1>
+            <div class="score-board">
+                <span>Score: <span id="score">0</span></span>
+                <span>Level: <span id="level">1</span></span>
+            </div>
+        </header>
+        
+        <main>
+            <div class="instruction-panel">
+                <p>Analyze the email below. Look for cultural markers, localized slang, regional authorities, or ESL syntax errors to determine if it's a legitimate email or a phishing attempt.</p>
+            </div>
+
+            <div class="email-client">
+                <div class="email-header">
+                    <div class="email-row"><strong>From:</strong> <span id="email-sender">sender@example.com</span></div>
+                    <div class="email-row"><strong>To:</strong> <span id="email-recipient">employee@company.com</span></div>
+                    <div class="email-row"><strong>Subject:</strong> <span id="email-subject">Subject Here</span></div>
+                    <div class="email-row"><strong>Date:</strong> <span id="email-date">monday, 12 Oct</span></div>
+                </div>
+                <div class="email-body" id="email-body">
+                    Loading email content...
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button id="btn-legit" class="btn btn-legit">Legitimate</button>
+                <button id="btn-phish" class="btn btn-phish">Phishing</button>
+            </div>
+
+            <div id="feedback-modal" class="modal hidden">
+                <div class="modal-content">
+                    <h2 id="feedback-title">Result</h2>
+                    <p id="feedback-message">Feedback goes here.</p>
+                    <button id="btn-next" class="btn">Next Email</button>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
