@@ -70,6 +70,10 @@
                 <button id="btn-phish" class="btn btn-phish">⚠ Phishing</button>
             </div>
 
+            <div class="save-quit-wrap">
+                <button id="btn-save-quit" class="btn-save-quit hidden">💾 Save &amp; Quit</button>
+            </div>
+
             <!-- Red flag question modal -->
             <div id="redflag-modal" class="modal hidden">
                 <div class="modal-content">
@@ -92,6 +96,19 @@
                 </div>
             </div>
         </main>
+    </div>
+
+    <!-- Resume session modal -->
+    <div id="resume-modal" class="modal hidden">
+        <div class="modal-content team-modal-content">
+            <div class="team-screen-icon">👋</div>
+            <h2>Welcome back!</h2>
+            <p id="resume-details" class="team-screen-subtitle"></p>
+            <div class="resume-actions">
+                <button id="btn-resume" class="btn btn-next">Resume →</button>
+                <button id="btn-start-fresh" class="btn btn-start-fresh">Start Fresh</button>
+            </div>
+        </div>
     </div>
 
     <!-- Team registration screen (shown on load) -->

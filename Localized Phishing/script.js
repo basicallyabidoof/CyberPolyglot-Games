@@ -226,6 +226,25 @@ let gameState    = 'classify';
 let teamId       = null;
 let teamName     = null;
 
+// --- Session persistence (localStorage) ---
+const SESSION_KEY = 'phishcatchers_session';
+
+function saveSession() {
+    if (!teamId) return;
+    localStorage.setItem(SESSION_KEY, JSON.stringify({
+        teamId, teamName, currentIndex, score, streak
+    }));
+}
+
+function clearSession() {
+    localStorage.removeItem(SESSION_KEY);
+}
+
+function loadSession() {
+    try { return JSON.parse(localStorage.getItem(SESSION_KEY)); }
+    catch { return null; }
+}
+
 // --- DOM refs ---
 const emailView    = document.getElementById('email-view');
 const smsView      = document.getElementById('sms-view');
@@ -263,9 +282,17 @@ async function joinTeam(name) {
         document.getElementById('team-name-display').textContent = `Team: ${teamName}`;
         document.getElementById('team-name-display').classList.remove('hidden');
         document.getElementById('btn-leaderboard').classList.remove('hidden');
+        document.getElementById('btn-save-quit').classList.remove('hidden');
 
         teamScreen.classList.add('hidden');
-        loadMessage();
+
+        // Check for a saved session for this team
+        const saved = loadSession();
+        if (saved && saved.teamId === data.id && saved.currentIndex > 0 && saved.currentIndex < messages.length) {
+            showResumePrompt(saved);
+        } else {
+            loadMessage();
+        }
     } catch (err) {
         errorEl.textContent = err.message === 'Failed to fetch'
             ? 'Cannot reach server. Make sure app.py is running.'
@@ -364,6 +391,54 @@ document.getElementById('btn-close-leaderboard').addEventListener('click', () =>
 function escapeHtml(s) {
     return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
+
+// --- Session resume ---
+
+function showResumePrompt(saved) {
+    document.getElementById('resume-details').textContent =
+        `You left off at challenge ${saved.currentIndex + 1} of ${messages.length} with ${saved.score} points.`;
+    document.getElementById('resume-modal').classList.remove('hidden');
+}
+
+document.getElementById('btn-resume').addEventListener('click', () => {
+    const saved = loadSession();
+    currentIndex = saved.currentIndex;
+    score        = saved.score;
+    streak       = saved.streak || 0;
+    updateScore();
+    document.getElementById('resume-modal').classList.add('hidden');
+    loadMessage();
+});
+
+document.getElementById('btn-start-fresh').addEventListener('click', () => {
+    clearSession();
+    document.getElementById('resume-modal').classList.add('hidden');
+    loadMessage();
+});
+
+// --- Save & Quit ---
+
+document.getElementById('btn-save-quit').addEventListener('click', () => {
+    saveSession();
+    document.querySelector('main').innerHTML = `
+        <div class="game-over">
+            <div class="game-over-icon">💾</div>
+            <h2>Progress Saved!</h2>
+            <p style="text-align:center;color:#555;margin-bottom:20px;line-height:1.6">
+                Come back and enter <strong>"${escapeHtml(teamName)}"</strong><br>
+                to pick up right where you left off.
+            </p>
+            <div class="score-breakdown">
+                <div class="breakdown-row"><span>Challenge</span><span>${currentIndex + 1} / ${messages.length}</span></div>
+                <div class="breakdown-row"><span>Score so far</span><span>${score}</span></div>
+                <div class="breakdown-row"><span>Team</span><span>${escapeHtml(teamName)}</span></div>
+            </div>
+            <button class="btn btn-next" style="margin-top:20px" onclick="location.reload()">Back to Start</button>
+        </div>
+    `;
+    document.getElementById('progress-bar').style.width =
+        (currentIndex / messages.length * 100) + '%';
+});
 
 // --- Core game logic ---
 
@@ -477,8 +552,10 @@ document.getElementById('btn-next').addEventListener('click', () => {
     feedbackModal.classList.add('hidden');
     currentIndex++;
     if (currentIndex < messages.length) {
+        saveSession();   // auto-save after every challenge
         loadMessage();
     } else {
+        clearSession();  // finished naturally — no need to resume
         showGameOver();
     }
 });

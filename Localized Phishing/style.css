@@ -530,6 +530,52 @@ main {
     letter-spacing: 0.5px;
 }
 
+/* Save & Quit button */
+.save-quit-wrap {
+    text-align: center;
+    margin-top: 14px;
+}
+
+.btn-save-quit {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: color 0.15s, background 0.15s;
+}
+
+.btn-save-quit:hover {
+    color: var(--text);
+    background: #f0f2f5;
+}
+
+/* Resume modal */
+.resume-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.btn-start-fresh {
+    background: none;
+    border: 2px solid var(--border);
+    color: var(--text-muted);
+    padding: 11px 28px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+}
+
+.btn-start-fresh:hover {
+    border-color: #aaa;
+    color: var(--text);
+}
+
 /* Team registration screen */
 .team-modal-content {
     max-width: 420px !important;
