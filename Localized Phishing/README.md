@@ -1,42 +1,143 @@
 # Phish Catchers: Localized Edition
 
 ## Purpose
-**Phish Catchers: Localized Edition** is an interactive, browser-based educational game designed to train users in the art of **Cultural Social Engineering**. 
+**Phish Catchers: Localized Edition** is an interactive educational game that trains players in **Cultural Social Engineering** awareness — the craft of spotting hyper-localized phishing attacks that generic security training misses entirely.
 
-While many anti-phishing training programs focus on generic red flags (like mismatched URLs or urgent requests), this project emphasizes the cultural, regional, and linguistic nuances that attackers exploit. By analyzing hyper-localized phishing lures, players learn to spot:
-* **ESL (English as a Second Language) Phrasing Patterns:** Subtle syntax errors, such as using "Dear Mr. [First Name]", leaving days of the week uncapitalized, or awkward phrases like "receive your approval" instead of "hear back from you."
-* **Regional Authorities:** Spoofed emails impersonating local government entities, tax agencies (e.g., HMRC in the UK, CRA in Canada, ATO in Australia), or local service providers.
-* **Cultural Slang and Markers:** Inappropriate or unnatural use of local expressions that native speakers would easily recognize as fraudulent.
+While most anti-phishing programs focus on universal red flags, this game emphasizes the cultural, regional, and linguistic nuances that attackers deliberately exploit. Players analyse both **emails and SMS texts (smishing)** from around the world and learn to identify:
+
+- **ESL phrasing patterns** — subtle syntax errors like "Dear Mr. [First Name]", uncapitalized days of the week, or awkward constructions like "kindly do the needful" that reveal a non-native writer
+- **Regional authority spoofing** — fake domains impersonating local government entities such as HMRC (UK), CRA (Canada), ATO (Australia), myGov (Australia), CAF (France), and SBI (India)
+- **Cultural tells** — inappropriate or unnatural use of local expressions, payment methods (Pix, INTERAC), or delivery services that a local resident would instantly recognise as wrong
+
+---
+
+## Game Features
+
+| Feature | Description |
+|---|---|
+| **16 challenges** | 8 localized emails + 8 SMS/smishing texts across 10+ countries |
+| **Spot the Red Flag** | After correctly identifying a phish, pick *why* it's suspicious from 4 options for a +50 bonus |
+| **Streak counter** | 🔥 badge appears after 2+ consecutive correct answers |
+| **Progress bar** | Visual progress across all 16 challenges |
+| **Grade system** | Expert Analyst → Solid Defender → Needs Practice → Stay Vigilant |
+| **Team leaderboard** | Conference mode: teams pool scores across devices in real time |
+
+---
 
 ## How to Run
-This is a lightweight, client-side web application. No servers or dependencies are required.
 
-1. Clone or download this repository.
-2. Navigate to the `Localized Phishing` directory.
-3. Double-click the `index.html` file to open it in your default web browser.
-4. Read the emails presented and click **Legitimate** or **Phishing** based on the cultural markers you spot!
+### Standalone mode (no server required)
+If you just want to play the game locally without team features:
+
+1. Clone or download this repository
+2. Open `Localized Phishing/index.html` directly in your browser
+
+> **Note:** Team registration will show a "Cannot reach server" error in standalone mode — dismiss it or run the full server below.
+
+---
+
+### Conference / team mode (Flask server)
+
+This mode enables multiple players to register a team name, pool their scores, and compete on a live leaderboard — ideal for security awareness events.
+
+**Requirements:** Python 3.8+ and Flask
+
+```bash
+pip install flask
+```
+
+**Start the server:**
+
+```bash
+cd "Localized Phishing"
+python3 app.py
+```
+
+The server starts on port `5001` and prints your local network IP:
+
+```
+Phish Catchers server → http://0.0.0.0:5001
+Share your local network IP (e.g. http://192.168.x.x:5001) with all players.
+```
+
+Share that URL with all players on the same WiFi network. The SQLite database (`phishing.db`) is created automatically on first launch — no setup step needed.
+
+**API endpoints (for reference):**
+
+| Method | Endpoint | Purpose |
+|---|---|---|
+| `POST` | `/api/teams` | Register or rejoin a team by name |
+| `POST` | `/api/scores` | Submit a completed run score |
+| `GET` | `/api/leaderboard` | Fetch top 25 teams by cumulative score |
+
+---
+
+## Scoring
+
+| Action | Points |
+|---|---|
+| Correct classification (Legit/Phishing) | +100 |
+| Correct red flag identification | +50 bonus |
+| Maximum possible score | **2,100** |
+
+Team scores are **cumulative** — every team member's run adds to the team total. A team of four playing through all 16 challenges together can score up to 8,400 points.
+
+---
 
 ## Call for Open Source Contributors
-We need your help to make this game a truly global educational resource! Cyber criminals localize their attacks for every region, and we want our training to reflect that reality.
 
-We are actively seeking contributors to create new simulated phishing messages (and legitimate control messages) in their **local languages** and incorporating **local references**.
+Cyber criminals localize their attacks for every region — and this training should reflect that reality. We need contributors to add phishing scenarios in their **local languages** with **local references**.
 
-### How to Contribute
-1. Fork this repository.
-2. Open `script.js` and locate the `emails` array.
-3. Add a new object to the array following this structure:
-   ```javascript
-   {
-       sender: "suspicious-or-legit@domain.com",
-       recipient: "victim@example.com",
-       subject: "Your localized subject line here",
-       date: "day, DD Mon",
-       body: "The content of your email. Use \n\n for line breaks.",
-       isPhish: true, // true if it's a phishing attempt, false if it's a legitimate control email
-       explanation: "Explain the cultural markers, ESL patterns, or regional authority spoofing that gives this away as a phish (or why it's legitimate)."
-   }
-   ```
-4. **Be creative!** Use your local tax agencies, popular regional banks, or common slang from your country.
-5. Submit a Pull Request with a brief explanation of the cultural context you've added.
+### Adding an email scenario
 
-Together, we can build a comprehensive database of hyper-localized social engineering attacks to better educate and protect users worldwide.
+Open `script.js` and add an object to the `messages` array:
+
+```javascript
+{
+    type: 'email',
+    sender: "spoofed@fake-domain.com",
+    recipient: "victim@example.com",
+    subject: "Your localized subject line",
+    date: "day, DD Mon",  // intentional errors are fair game
+    body: "Email body. Use \\n\\n for paragraph breaks.",
+    isPhish: true,  // true = phishing, false = legitimate
+    explanation: "Explain what gives it away — ESL patterns, fake domain, cultural tell, etc.",
+    // Required for phishing scenarios — omit for legitimate emails:
+    redFlags: [
+        { text: "The primary red flag (e.g. fake domain, ESL phrase)", correct: true },
+        { text: "A plausible-sounding but incorrect distractor", correct: false },
+        { text: "Another distractor", correct: false },
+        { text: "A fourth option", correct: false }
+    ]
+}
+```
+
+### Adding an SMS / smishing scenario
+
+```javascript
+{
+    type: 'sms',
+    from: "Display name (e.g. DHL, HMRC)",
+    senderNumber: "+XX XXX XXX XXXX or alphanumeric sender ID",
+    timestamp: "Today 10:34 AM",
+    body: "The SMS message content.",
+    isPhish: true,
+    explanation: "Explain the smishing indicators — fake link domain, urgency tactics, etc.",
+    // Required for phishing scenarios:
+    redFlags: [
+        { text: "Primary indicator", correct: true },
+        { text: "Distractor", correct: false },
+        { text: "Distractor", correct: false },
+        { text: "Distractor", correct: false }
+    ]
+}
+```
+
+### Tips for good contributions
+
+- **Include at least one legitimate control message** for each country/region you add — it makes the game harder and more realistic
+- **Keep `redFlags` distractors plausible** — wrong answers should be things players might reasonably suspect
+- **Add your explanation in English** even if the message itself is in another language, so the feedback is accessible to all players
+- **Use real regional markers**: local tax agencies, popular banks, delivery services, payment methods (BLIK, Pix, INTERAC, UPI, etc.), and government portals
+
+Submit a Pull Request with a brief note on the cultural context you've added. Together we can build a comprehensive, global social engineering training resource.
