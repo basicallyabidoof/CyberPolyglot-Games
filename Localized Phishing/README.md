@@ -62,6 +62,18 @@ Share your local network IP (e.g. http://192.168.x.x:5001) with all players.
 
 Share that URL with all players on the same WiFi network. The SQLite database (`phishing.db`) is created automatically on first launch — no setup step needed.
 
+**Troubleshooting:**
+
+If you see `Address already in use` on port 5001, another process (or a previous server run) is still holding the port. Free it with:
+
+```bash
+kill $(lsof -i :5001 -t)
+```
+
+Then start `app.py` again.
+
+---
+
 **API endpoints (for reference):**
 
 | Method | Endpoint | Purpose |
