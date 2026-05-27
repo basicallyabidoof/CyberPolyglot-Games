@@ -9,44 +9,116 @@
 <body>
     <div class="game-container">
         <header>
-            <h1>Phish Catchers: Localized Edition</h1>
+            <div class="header-left">
+                <h1>Phish Catchers: Localized Edition</h1>
+                <span id="team-name-display" class="team-name-display hidden"></span>
+            </div>
             <div class="score-board">
+                <span id="streak-display" class="streak-display hidden">🔥 <span id="streak-count">0</span>x</span>
                 <span>Score: <span id="score">0</span></span>
-                <span>Level: <span id="level">1</span></span>
+                <span><span id="level">1</span> / <span id="total">16</span></span>
+                <button id="btn-leaderboard" class="btn-leaderboard-header hidden" title="View leaderboard">🏆</button>
             </div>
         </header>
-        
+
+        <div class="progress-bar-wrap">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+
         <main>
             <div class="instruction-panel">
-                <p>Analyze the email below. Look for cultural markers, localized slang, regional authorities, or ESL syntax errors to determine if it's a legitimate email or a phishing attempt.</p>
+                <p>You'll face <strong>emails</strong> and <strong>SMS texts</strong> from around the world. Spot fake domains, ESL grammar errors, urgency pressure, and cultural tells — then decide: Legitimate or Phishing?</p>
             </div>
 
-            <div class="email-client">
+            <div class="type-badge-row">
+                <span id="type-badge" class="type-badge">EMAIL</span>
+            </div>
+
+            <!-- Email view -->
+            <div id="email-view" class="email-client">
                 <div class="email-header">
-                    <div class="email-row"><strong>From:</strong> <span id="email-sender">sender@example.com</span></div>
-                    <div class="email-row"><strong>To:</strong> <span id="email-recipient">employee@company.com</span></div>
-                    <div class="email-row"><strong>Subject:</strong> <span id="email-subject">Subject Here</span></div>
-                    <div class="email-row"><strong>Date:</strong> <span id="email-date">monday, 12 Oct</span></div>
+                    <div class="email-row"><strong>From:</strong> <span id="email-sender"></span></div>
+                    <div class="email-row"><strong>To:</strong> <span id="email-recipient"></span></div>
+                    <div class="email-row"><strong>Subject:</strong> <span id="email-subject"></span></div>
+                    <div class="email-row"><strong>Date:</strong> <span id="email-date"></span></div>
                 </div>
-                <div class="email-body" id="email-body">
-                    Loading email content...
+                <div class="email-body" id="email-body"></div>
+            </div>
+
+            <!-- SMS view -->
+            <div id="sms-view" class="sms-phone hidden">
+                <div class="sms-status-bar">
+                    <span class="sms-time">9:41</span>
+                    <span class="sms-signal">●●●●● WiFi</span>
+                </div>
+                <div class="sms-contact-bar">
+                    <span class="sms-back">‹</span>
+                    <div class="sms-avatar">📱</div>
+                    <div class="sms-contact-info">
+                        <div class="sms-contact-name" id="sms-from"></div>
+                        <div class="sms-contact-number" id="sms-number"></div>
+                    </div>
+                </div>
+                <div class="sms-messages">
+                    <div class="sms-timestamp" id="sms-timestamp"></div>
+                    <div class="sms-bubble" id="sms-body"></div>
                 </div>
             </div>
 
             <div class="action-buttons">
-                <button id="btn-legit" class="btn btn-legit">Legitimate</button>
-                <button id="btn-phish" class="btn btn-phish">Phishing</button>
+                <button id="btn-legit" class="btn btn-legit">✓ Legitimate</button>
+                <button id="btn-phish" class="btn btn-phish">⚠ Phishing</button>
             </div>
 
+            <!-- Red flag question modal -->
+            <div id="redflag-modal" class="modal hidden">
+                <div class="modal-content">
+                    <div class="redflag-header">
+                        <div class="redflag-correct-badge">✓ Correct!</div>
+                        <h2>What was the biggest red flag?</h2>
+                        <p class="redflag-subtitle">Identify it for a <strong>+50 bonus</strong></p>
+                    </div>
+                    <div id="redflag-options" class="redflag-options"></div>
+                </div>
+            </div>
+
+            <!-- Feedback modal -->
             <div id="feedback-modal" class="modal hidden">
                 <div class="modal-content">
                     <h2 id="feedback-title">Result</h2>
-                    <p id="feedback-message">Feedback goes here.</p>
-                    <button id="btn-next" class="btn">Next Email</button>
+                    <div id="feedback-bonus" class="feedback-bonus hidden">+50 bonus!</div>
+                    <p id="feedback-message"></p>
+                    <button id="btn-next" class="btn btn-next">Next Challenge →</button>
                 </div>
             </div>
         </main>
     </div>
+
+    <!-- Team registration screen (shown on load) -->
+    <div id="team-screen" class="modal">
+        <div class="modal-content team-modal-content">
+            <div class="team-screen-icon">🎣</div>
+            <h2>Phish Catchers</h2>
+            <p class="team-screen-subtitle">Enter your team name to start.<br>Teammates can enter the same name to pool scores.</p>
+            <div class="team-input-wrap">
+                <input id="team-name-input" type="text" placeholder="Team name…" maxlength="50" autocomplete="off" />
+                <button id="btn-join-team" class="btn btn-next">Join / Create Team →</button>
+            </div>
+            <p id="team-error" class="team-error hidden"></p>
+        </div>
+    </div>
+
+    <!-- Leaderboard modal -->
+    <div id="leaderboard-modal" class="modal hidden">
+        <div class="modal-content leaderboard-modal-content">
+            <h2>🏆 Team Leaderboard</h2>
+            <div id="leaderboard-body" class="leaderboard-body">
+                <p class="leaderboard-loading">Loading…</p>
+            </div>
+            <button id="btn-close-leaderboard" class="btn btn-next">Close</button>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
