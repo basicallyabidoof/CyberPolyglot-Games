@@ -215,16 +215,262 @@ const messages = [
         body: "SBI: Your OTP for login is 847291. NEVER share this OTP with anyone including bank officials. Valid for 10 mins. If not requested by you, call 1800-11-2211.",
         isPhish: false,
         explanation: "Legitimate! Real bank OTP messages include the code, explicitly warn you never to share it (even with 'bank officials' — a social engineering countermeasure), give a validity window, and provide a callback number. No link, no request to click anything."
+    },
+
+    // --- ADDITIONAL EMAILS ---
+    {
+        type: 'email',
+        sender: "info@nta-e-tax.net",
+        recipient: "tanaka@example.jp",
+        subject: "【国税庁】還付金のお知らせ（重要）",
+        date: "2024年3月18日（月曜日）",
+        body: "田中 様\n\n国税庁より還付金23,400円が確定しました。\n\n以下のリンクから24時間以内にお手続きください。手続きが遅れた場合、還付金は無効となります。\n\nhttp://nta-e-tax.net/refund/apply\n\n国税庁 e-Tax サービスデスク",
+        isPhish: true,
+        explanation: "Phishing! All Japanese government websites end in .go.jp — the real National Tax Agency uses nta.go.jp. 'nta-e-tax.net' is entirely fake. The '24時間以内' (within 24 hours) deadline is classic urgency pressure. Legitimate e-Tax refund notifications are sent through the My Number portal, never by email with external links.",
+        redFlags: [
+            { text: "Fake domain — Japanese government sites always use .go.jp (nta.go.jp)", correct: true },
+            { text: "The refund amount (23,400円) is suspiciously specific", correct: false },
+            { text: "The National Tax Agency never contacts Japanese taxpayers by email", correct: false },
+            { text: "The email doesn't include a case reference number", correct: false }
+        ]
+    },
+    {
+        type: 'email',
+        sender: "service@alipay-secure.net",
+        recipient: "user@example.com",
+        subject: "【支付宝】您的账户因异常操作已被限制，请尽快处理",
+        date: "2024年4月9日 星期二",
+        body: "尊敬的用户您好，\n\n您的支付宝账户于今日检测到异常登录行为，账户已被临时限制。\n\n请在48小时内点击以下链接完成身份验证，否则账户将被永久冻结。\n\nhttp://alipay-secure.net/verify\n\n支付宝安全中心",
+        isPhish: true,
+        explanation: "Phishing! Alipay's real domain is alipay.com — 'alipay-secure.net' is fake. The threat of '永久冻结' (permanent freeze) within 48 hours is extreme pressure designed to panic the user into acting without thinking. Real Alipay security alerts are delivered inside the Alipay app only, never via email with external links.",
+        redFlags: [
+            { text: "Fake domain — Alipay only uses alipay.com, not alipay-secure.net", correct: true },
+            { text: "Alipay never sends alerts to non-Alipay email addresses", correct: false },
+            { text: "'永久冻结' (permanent freeze) is too extreme to appear in a real notification", correct: false },
+            { text: "The date format is wrong for Alipay notifications", correct: false }
+        ]
+    },
+    {
+        type: 'email',
+        sender: "beveiliging@ing-beveiligingsdienst.nl",
+        recipient: "klant@example.nl",
+        subject: "Uw ING rekening is tijdelijk geblokkeerd",
+        date: "dinsdag, 15 April",
+        body: "Geachte klant,\n\nOns beveiligingssysteem heeft verdachte activiteit gedetecteerd op uw rekening. Om uw rekening te beveiligen, heeft u uw gegevens moeten bevestigen.\n\nKlik hier om uw account te ontgrendelen en toegang te herstellen.\n\nMet vriendelijke groet,\nING Klantenservice",
+        isPhish: true,
+        explanation: "Phishing! ING's real domain is ing.nl — 'ing-beveiligingsdienst.nl' is a fake look-alike. The phrase 'heeft u uw gegevens moeten bevestigen' is grammatically incorrect Dutch (correct: 'moet u uw gegevens bevestigen') — a subtle ESL error that a native Dutch speaker would notice immediately. Note: unlike German, Dutch days of the week ARE lowercase, so 'dinsdag' is correct here.",
+        redFlags: [
+            { text: "Fake domain — ING only emails from @ing.nl", correct: true },
+            { text: "'dinsdag' should be capitalised — Dutch days are always capitalised", correct: false },
+            { text: "'heeft u uw gegevens moeten bevestigen' is grammatically wrong Dutch", correct: false },
+            { text: "The greeting 'Geachte klant' is too formal for ING", correct: false }
+        ]
+    },
+    {
+        type: 'email',
+        sender: "notifiche@posteitaliane-delivery.com",
+        recipient: "cliente@example.it",
+        subject: "Il tuo pacco è in attesa di consegna — Azione richiesta",
+        date: "mercoledì, 20 marzo",
+        body: "Gentile cliente,\n\nIl tuo pacco non è stato consegnato a causa di informazioni di indirizzo incomplete. Una tassa di spedizione di €2,50 deve essere pagata entro 48 ore per evitare la restituzione del pacco.\n\nConferma il tuo indirizzo e paga qui:\nhttp://posteitaliane-delivery.com/pago\n\nSaluti,\nPoste Italiane — Servizio Consegne",
+        isPhish: true,
+        explanation: "Phishing! The real Poste Italiane uses posteitaliane.it — 'posteitaliane-delivery.com' is a fake domain. The €2,50 fee is deliberately small to seem worth paying without scrutiny. Important: in Italian, days of the week are NOT capitalised ('mercoledì' is correct), so that is not a red flag here — the fake domain is the decisive tell.",
+        redFlags: [
+            { text: "Fake domain — Poste Italiane uses posteitaliane.it, not .com", correct: true },
+            { text: "'mercoledì' must be capitalised — Italian days are always capitalised", correct: false },
+            { text: "Italian postal services never send delivery notifications by email", correct: false },
+            { text: "The fee amount (€2,50) uses a comma, which is wrong", correct: false }
+        ]
+    },
+    {
+        type: 'email',
+        sender: "aterbetalning@skatteverket-se.com",
+        recipient: "user@example.se",
+        subject: "Skatteverket: Du har en skatteåterbäring väntande",
+        date: "måndag, 11 mars",
+        body: "Hej,\n\nVi har granskat din deklaration och fastställt att du har rätt till en skatteåterbäring på 3 420 kr.\n\nFör att behandla din återbetalning, vänligen bekräfta dina bankuppgifter inom 5 dagar:\n\nhttp://skatteverket-se.com/aterbetalning\n\nMed vänliga hälsningar,\nSkatteverket",
+        isPhish: true,
+        explanation: "Phishing! The real Swedish Tax Agency uses skatteverket.se — 'skatteverket-se.com' embeds the country code into the domain name, a common trick to look official. The real Skatteverket deposits refunds automatically to the bank account registered in Skattekonto — it never emails you asking to 'confirm bank details' via a link.",
+        redFlags: [
+            { text: "Fake domain — skatteverket-se.com mimics the real skatteverket.se", correct: true },
+            { text: "Swedish tax refunds are never communicated by email", correct: false },
+            { text: "'Hej' is too informal an opening for a government agency", correct: false },
+            { text: "The refund amount (3 420 kr) is suspiciously round", correct: false }
+        ]
+    },
+    {
+        type: 'email',
+        sender: "alert@mbank-powiadomienie.pl",
+        recipient: "klient@example.pl",
+        subject: "mBank: Twoje konto zostało tymczasowo zablokowane",
+        date: "wtorek, 16 kwiecień",
+        body: "Szanowny Kliencie,\n\nWykryliśmy podejrzaną aktywność na Twoim koncie. W celu ochrony środków, Twoje konto zostało tymczasowo zablokowane.\n\nAby odblokować konto i potwierdzić tożsamość, kliknij poniższy link w ciągu 12 godzin:\n\nhttp://mbank-powiadomienie.pl/odblokuj\n\nPozdrowienia,\nZespół Bezpieczeństwa mBanku",
+        isPhish: true,
+        explanation: "Phishing! The real mBank uses mbank.pl — 'mbank-powiadomienie.pl' is a look-alike. The date 'wtorek, 16 kwiecień' contains a subtle but glaring Polish grammar error: after a number, the month must take the genitive case — '16 kwietnia', not '16 kwiecień'. No native Polish speaker would write this. The 12-hour deadline is also a pressure tactic.",
+        redFlags: [
+            { text: "'16 kwiecień' is wrong Polish — the genitive case requires '16 kwietnia'", correct: true },
+            { text: "mBank never sends security alerts in Polish", correct: false },
+            { text: "The domain mbank-powiadomienie.pl is fake", correct: false },
+            { text: "A 12-hour deadline is never used by legitimate banks", correct: false }
+        ]
+    },
+    {
+        type: 'email',
+        sender: "bildirim@ptt-kargo-bilgi.com",
+        recipient: "musteri@example.com.tr",
+        subject: "PTT Kargo: Paketiniz teslim bekliyor",
+        date: "Pazartesi, 4 Mart",
+        body: "Sayın Müşteri,\n\nKargo takip numaranız 7340291847 olan paketiniz yanlış adres bilgisi nedeniyle teslim edilememiştir.\n\nPaketi almak için 24 saat içinde adres bilgilerinizi güncelleyin ve 4,90 TL ücret ödeyin:\n\nhttp://ptt-kargo-bilgi.com/guncelle\n\nSaygılarımızla,\nPTT Kargo",
+        isPhish: true,
+        explanation: "Phishing! All Turkish government and state services use .gov.tr — PTT's real domain is ptt.gov.tr. 'ptt-kargo-bilgi.com' is entirely fake. The 24-hour deadline and small fee (4,90 TL) mirror delivery smishing campaigns running across Europe and Turkey. PTT never requests address updates or payments via email links.",
+        redFlags: [
+            { text: "Fake domain — Turkish state PTT uses ptt.gov.tr, not .com", correct: true },
+            { text: "The tracking number format is too short for PTT Kargo", correct: false },
+            { text: "PTT Kargo never emails customers about delivery issues", correct: false },
+            { text: "'Sayın Müşteri' is too generic a greeting for PTT", correct: false }
+        ]
+    },
+    {
+        type: 'email',
+        sender: "noreply@inps.it",
+        recipient: "lavoratore@example.it",
+        subject: "INPS: Rinnovo PIN dispositivo completato",
+        date: "Mercoledì, 5 giugno",
+        body: "Gentile Utente,\n\nLe comunichiamo che il suo PIN dispositivo INPS è stato rinnovato con successo e sarà operativo entro 48 ore lavorative.\n\nPer accedere ai servizi INPS utilizzi il portale ufficiale www.inps.it oppure l'applicazione INPS Mobile.\n\nPer assistenza contatti il Contact Center al numero gratuito 803 164.\n\nCordiali saluti,\nIstituto Nazionale Previdenza Sociale",
+        isPhish: false,
+        explanation: "Legitimate! The sender is from inps.it — Italy's official national social security institute. The email contains no link to click; it directs you to the known official portal (www.inps.it) or a free phone number. It informs rather than demands, and there is no urgency or credential request."
+    },
+
+    // --- ADDITIONAL SMS ---
+    {
+        type: 'sms',
+        from: "ヤマト運輸",
+        senderNumber: "0120-01-9625",
+        timestamp: "Today 2:14 PM",
+        body: "【ヤマト運輸】お荷物のお届けにあがりましたが不在のため持ち帰りました。再配達のお手続きはこちら: yamato-unyu-haiso.com/saihaitatsu",
+        isPhish: true,
+        explanation: "Smishing! This is Japan's single most common smishing lure. The real Yamato Transport (ヤマト運輸) uses kuronekoyamato.co.jp — 'yamato-unyu-haiso.com' is entirely fake. Real Yamato redelivery requests are made through the official app or by calling the company directly. The Japanese message itself is copied verbatim from millions of real Yamato notifications, making it convincing to native speakers.",
+        redFlags: [
+            { text: "Fake domain — Yamato Transport uses kuronekoyamato.co.jp", correct: true },
+            { text: "The message is in Japanese, which is unusual for a delivery company", correct: false },
+            { text: "Yamato Transport never sends SMS delivery notifications", correct: false },
+            { text: "The phone number format is incorrect for Japanese freephone numbers", correct: false }
+        ]
+    },
+    {
+        type: 'sms',
+        from: "경찰청",
+        senderNumber: "+82-2-1566-0112",
+        timestamp: "Today 10:05 AM",
+        body: "【경찰청】귀하의 명의로 금융사기 관련 수사가 진행 중입니다. 출석 요구서 확인 및 사건 조회는 아래 링크를 통해 즉시 확인하십시오: police-cyber-crime.net/confirm",
+        isPhish: true,
+        explanation: "Smishing! This is Korea's notorious '보이스피싱' (voice phishing) technique — impersonating the National Police Agency (경찰청) to create fear of criminal prosecution. The real Korean National Police Agency uses police.go.kr (.go.kr = Korean government domain). No government authority in South Korea summons citizens through an SMS link — official summons are always delivered in person or by registered mail.",
+        redFlags: [
+            { text: "Fake domain — Korean police use police.go.kr (.go.kr = Korean government)", correct: true },
+            { text: "The Korean police would write in formal honorific Korean only", correct: false },
+            { text: "A criminal investigation notice would never be sent by SMS in any country", correct: false },
+            { text: "The phone number is too long for a Korean police number", correct: false }
+        ]
+    },
+    {
+        type: 'sms',
+        from: "BankID",
+        senderNumber: "BankID",
+        timestamp: "Today 8:33 AM",
+        body: "BankID: Din inloggningssession är komprometterad. Avbryt obehörig inloggning omedelbart: bankid-sakerhet.se/avbryt",
+        isPhish: true,
+        explanation: "Smishing! BankID is Sweden's universal digital identity system used for banking, taxes, and government services — making it a prime smishing target. The real BankID communicates exclusively through the BankID app, never via SMS links. 'bankid-sakerhet.se' is fake. The word 'komprometterad' (compromised) and 'obehörig inloggning' (unauthorised login) are designed to panic Swedish users into clicking without thinking.",
+        redFlags: [
+            { text: "BankID only communicates through its app — it never sends SMS links", correct: true },
+            { text: "Swedish security messages always use English terms like 'compromised'", correct: false },
+            { text: "bankid-sakerhet.se sounds official because it uses Swedish words", correct: false },
+            { text: "BankID would say 'Dear [name]' not use an impersonal message", correct: false }
+        ]
+    },
+    {
+        type: 'sms',
+        from: "PostNL",
+        senderNumber: "+31 88 868 6868",
+        timestamp: "Tue 11:22 AM",
+        body: "PostNL: Uw pakket is vastgehouden bij de douane. Betaal €1,95 invoerrechten om vertraging te vermijden: postnl-douane.nl/betalen",
+        isPhish: true,
+        explanation: "Smishing! This is the Dutch equivalent of the DHL Germany customs fee scam — identical in structure. PostNL's real domain is postnl.nl — 'postnl-douane.nl' is a fake look-alike domain ('douane' = customs). The real PostNL handles customs notices through its tracking portal, not SMS payment links. The €1,95 fee is small enough to seem worth paying without checking.",
+        redFlags: [
+            { text: "Fake domain — PostNL uses postnl.nl, not postnl-douane.nl", correct: true },
+            { text: "Dutch customs fees are always much higher than €1,95", correct: false },
+            { text: "PostNL never sends any SMS messages", correct: false },
+            { text: "'vastgehouden bij de douane' is an unusual phrasing in Dutch", correct: false }
+        ]
+    },
+    {
+        type: 'sms',
+        from: "InPost",
+        senderNumber: "InPost",
+        timestamp: "Wed 9:47 AM",
+        body: "InPost: Twoja paczka #PL00183724 oczekuje w paczkomacie. Potwierdź odbiór i opłać zaległą kwotę 3,99 zł: inpost-platnosc.pl/odbior",
+        isPhish: true,
+        explanation: "Smishing! InPost is Poland's dominant parcel locker network and one of the country's most impersonated brands. The real InPost uses inpost.pl — 'inpost-platnosc.pl' ('platnosc' = payment) is a fake domain. Real InPost paczkomats (lockers) never require payment for pickup — you simply scan a QR code. The fee (3,99 zł) is small enough to seem plausible but the pickup process makes it impossible for a legitimate InPost text.",
+        redFlags: [
+            { text: "Fake domain — InPost uses inpost.pl, not inpost-platnosc.pl", correct: true },
+            { text: "InPost paczkomats never require payment to retrieve a package", correct: false },
+            { text: "Polish parcel lockers always require app-based QR code authentication", correct: false },
+            { text: "The tracking number format is not standard for InPost", correct: false }
+        ]
+    },
+    {
+        type: 'sms',
+        from: "BCA",
+        senderNumber: "+62 21-500888",
+        timestamp: "Today 3:28 PM",
+        body: "BCA: Transaksi mencurigakan terdeteksi di akun Anda. Segera verifikasi di: bca-secure.com/verifikasi atau akun Anda akan diblokir dalam 1x24 jam.",
+        isPhish: true,
+        explanation: "Smishing! Bank Central Asia (BCA) is Indonesia's largest private bank and frequently impersonated. The real BCA uses bca.co.id — 'bca-secure.com' is a fake domain. The phrase '1x24 jam' (literally 'one times 24 hours' — natural Indonesian idiom for 'within 24 hours') is authentic Indonesian phrasing that makes the message convincing to locals. Legitimate BCA security alerts are handled through the myBCA app only.",
+        redFlags: [
+            { text: "Fake domain — BCA uses bca.co.id, not bca-secure.com", correct: true },
+            { text: "'1x24 jam' is an unusual time format that reveals a scam", correct: false },
+            { text: "Indonesian banks never send SMS security alerts", correct: false },
+            { text: "BCA's real customer service number is different from this one", correct: false }
+        ]
+    },
+    {
+        type: 'sms',
+        from: "SARS",
+        senderNumber: "SARS",
+        timestamp: "Today 9:14 AM",
+        body: "SARS eFiling: Your OTP is 394827. Valid for 5 minutes. Do NOT share this OTP with anyone. SARS will NEVER ask for your OTP via phone, email, or SMS.",
+        isPhish: false,
+        explanation: "Legitimate! This South African Revenue Service OTP message follows the genuine SARS format: provides the code, gives a clear validity window, and crucially includes the explicit warning that SARS will 'NEVER ask for your OTP via phone, email, or SMS' — a specific anti-social-engineering statement only a real organisation would include. No link, no external request."
+    },
+    {
+        type: 'sms',
+        from: "e&",
+        senderNumber: "eand",
+        timestamp: "Today 6:00 AM",
+        body: "e&: رصيدك الحالي 45.30 درهم. لإضافة رصيد أو تفعيل باقة، اتصل بـ 101 أو استخدم تطبيق My e&. لا تشارك بياناتك مع أي شخص.",
+        isPhish: false,
+        explanation: "Legitimate! This Arabic-language e& (formerly Etisalat, UAE) balance notification shows only your current credit balance and directs you to call 101 or use the official app. It contains no link, no urgency, and no request for personal details. The reminder 'لا تشارك بياناتك' (don't share your information) is a hallmark of genuine telecoms security messaging."
     }
 ];
 
 // --- State ---
-let currentIndex = 0;
-let score        = 0;
-let streak       = 0;
-let gameState    = 'classify';
-let teamId       = null;
-let teamName     = null;
+let currentIndex      = 0;
+let score             = 0;
+let streak            = 0;
+let gameState         = 'classify';
+let teamId            = null;
+let teamName          = null;
+let shuffledMessages  = [];
+
+function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
+
+/** Always reference the active (shuffled) message via this helper */
+function currentMsg() { return shuffledMessages[currentIndex]; }
 
 // --- Session persistence (localStorage) ---
 const SESSION_KEY = 'phishcatchers_session';
@@ -232,7 +478,8 @@ const SESSION_KEY = 'phishcatchers_session';
 function saveSession() {
     if (!teamId) return;
     localStorage.setItem(SESSION_KEY, JSON.stringify({
-        teamId, teamName, currentIndex, score, streak
+        teamId, teamName, currentIndex, score, streak,
+        messageOrder: shuffledMessages.map(m => messages.indexOf(m))
     }));
 }
 
@@ -288,9 +535,11 @@ async function joinTeam(name) {
 
         // Check for a saved session for this team
         const saved = loadSession();
-        if (saved && saved.teamId === data.id && saved.currentIndex > 0 && saved.currentIndex < messages.length) {
+        if (saved && saved.teamId === data.id && saved.currentIndex > 0
+                && saved.messageOrder && saved.currentIndex < saved.messageOrder.length) {
             showResumePrompt(saved);
         } else {
+            shuffledMessages = shuffle([...messages]);
             loadMessage();
         }
     } catch (err) {
@@ -396,15 +645,16 @@ function escapeHtml(s) {
 
 function showResumePrompt(saved) {
     document.getElementById('resume-details').textContent =
-        `You left off at challenge ${saved.currentIndex + 1} of ${messages.length} with ${saved.score} points.`;
+        `You left off at challenge ${saved.currentIndex + 1} of ${saved.messageOrder.length} with ${saved.score} points.`;
     document.getElementById('resume-modal').classList.remove('hidden');
 }
 
 document.getElementById('btn-resume').addEventListener('click', () => {
     const saved = loadSession();
-    currentIndex = saved.currentIndex;
-    score        = saved.score;
-    streak       = saved.streak || 0;
+    currentIndex     = saved.currentIndex;
+    score            = saved.score;
+    streak           = saved.streak || 0;
+    shuffledMessages = saved.messageOrder.map(i => messages[i]);
     updateScore();
     document.getElementById('resume-modal').classList.add('hidden');
     loadMessage();
@@ -412,6 +662,7 @@ document.getElementById('btn-resume').addEventListener('click', () => {
 
 document.getElementById('btn-start-fresh').addEventListener('click', () => {
     clearSession();
+    shuffledMessages = shuffle([...messages]);
     document.getElementById('resume-modal').classList.add('hidden');
     loadMessage();
 });
@@ -429,7 +680,7 @@ document.getElementById('btn-save-quit').addEventListener('click', () => {
                 to pick up right where you left off.
             </p>
             <div class="score-breakdown">
-                <div class="breakdown-row"><span>Challenge</span><span>${currentIndex + 1} / ${messages.length}</span></div>
+                <div class="breakdown-row"><span>Challenge</span><span>${currentIndex + 1} / ${shuffledMessages.length}</span></div>
                 <div class="breakdown-row"><span>Score so far</span><span>${score}</span></div>
                 <div class="breakdown-row"><span>Team</span><span>${escapeHtml(teamName)}</span></div>
             </div>
@@ -437,13 +688,13 @@ document.getElementById('btn-save-quit').addEventListener('click', () => {
         </div>
     `;
     document.getElementById('progress-bar').style.width =
-        (currentIndex / messages.length * 100) + '%';
+        (currentIndex / shuffledMessages.length * 100) + '%';
 });
 
 // --- Core game logic ---
 
 function loadMessage() {
-    const msg = messages[currentIndex];
+    const msg = currentMsg();
     gameState  = 'classify';
     btnLegit.disabled = false;
     btnPhish.disabled = false;
@@ -470,7 +721,7 @@ function loadMessage() {
     }
 
     document.getElementById('level').textContent = currentIndex + 1;
-    document.getElementById('total').textContent = messages.length;
+    document.getElementById('total').textContent = shuffledMessages.length;
     updateProgressBar();
     updateStreakDisplay();
 }
@@ -481,7 +732,7 @@ function handleGuess(isGuessPhish) {
     btnLegit.disabled = true;
     btnPhish.disabled = true;
 
-    const msg       = messages[currentIndex];
+    const msg       = currentMsg();
     const isCorrect = isGuessPhish === msg.isPhish;
 
     if (isCorrect) {
@@ -528,7 +779,7 @@ function showFeedback(correct, bonusCorrect) {
     title.textContent = correct ? 'Correct!' : 'Incorrect!';
     title.style.color = correct ? '#27ae60' : '#e74c3c';
     bonusEl.classList.toggle('hidden', !bonusCorrect);
-    document.getElementById('feedback-message').textContent = messages[currentIndex].explanation;
+    document.getElementById('feedback-message').textContent = currentMsg().explanation;
     feedbackModal.classList.remove('hidden');
 }
 
@@ -542,7 +793,7 @@ function updateStreakDisplay() {
 
 function updateProgressBar() {
     document.getElementById('progress-bar').style.width =
-        (currentIndex / messages.length * 100) + '%';
+        (currentIndex / shuffledMessages.length * 100) + '%';
 }
 
 document.getElementById('btn-legit').addEventListener('click', () => handleGuess(false));
@@ -551,7 +802,7 @@ document.getElementById('btn-phish').addEventListener('click', () => handleGuess
 document.getElementById('btn-next').addEventListener('click', () => {
     feedbackModal.classList.add('hidden');
     currentIndex++;
-    if (currentIndex < messages.length) {
+    if (currentIndex < shuffledMessages.length) {
         saveSession();   // auto-save after every challenge
         loadMessage();
     } else {
@@ -563,8 +814,8 @@ document.getElementById('btn-next').addEventListener('click', () => {
 // --- Game over ---
 
 async function showGameOver() {
-    const phishWithFlags = messages.filter(m => m.isPhish && m.redFlags).length;
-    const maxScore = messages.length * 100 + phishWithFlags * 50;
+    const phishWithFlags = shuffledMessages.filter(m => m.isPhish && m.redFlags).length;
+    const maxScore = shuffledMessages.length * 100 + phishWithFlags * 50;
     const pct      = Math.round((score / maxScore) * 100);
 
     let grade, gradeColor;
@@ -581,9 +832,9 @@ async function showGameOver() {
             <div class="final-score-label">out of ${maxScore} possible points</div>
             <div class="grade-badge" style="color:${gradeColor};border-color:${gradeColor}">${grade}</div>
             <div class="score-breakdown">
-                <div class="breakdown-row"><span>Challenges analysed</span><span>${messages.length}</span></div>
-                <div class="breakdown-row"><span>Emails</span><span>${messages.filter(m => m.type === 'email').length}</span></div>
-                <div class="breakdown-row"><span>SMS / Smishing</span><span>${messages.filter(m => m.type === 'sms').length}</span></div>
+                <div class="breakdown-row"><span>Challenges analysed</span><span>${shuffledMessages.length}</span></div>
+                <div class="breakdown-row"><span>Emails</span><span>${shuffledMessages.filter(m => m.type === 'email').length}</span></div>
+                <div class="breakdown-row"><span>SMS / Smishing</span><span>${shuffledMessages.filter(m => m.type === 'sms').length}</span></div>
                 <div class="breakdown-row"><span>Score</span><span>${pct}%</span></div>
             </div>
             <div id="team-result" class="team-result">
