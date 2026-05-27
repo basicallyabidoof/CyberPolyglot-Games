@@ -1,3 +1,5 @@
+const API = '';  // same origin — Flask serves both static files and API
+
 const messages = [
     // --- EMAILS ---
     {
@@ -107,7 +109,7 @@ const messages = [
             { text: "Fake domain — Albanian Post uses postashqiptare.al, not .com", correct: true },
             { text: "150 LEK is an unusually small amount", correct: false },
             { text: "Albanian Post never sends emails", correct: false },
-            { text: "The subject line uses special characters (ë, ë)", correct: false }
+            { text: "The subject line uses special characters (ë)", correct: false }
         ]
     },
 
@@ -216,43 +218,180 @@ const messages = [
     }
 ];
 
+// --- State ---
 let currentIndex = 0;
-let score = 0;
-let streak = 0;
-let gameState = 'classify';
+let score        = 0;
+let streak       = 0;
+let gameState    = 'classify';
+let teamId       = null;
+let teamName     = null;
 
-const emailView = document.getElementById('email-view');
-const smsView = document.getElementById('sms-view');
-const feedbackModal = document.getElementById('feedback-modal');
-const redflagModal = document.getElementById('redflag-modal');
+// --- DOM refs ---
+const emailView    = document.getElementById('email-view');
+const smsView      = document.getElementById('sms-view');
+const feedbackModal  = document.getElementById('feedback-modal');
+const redflagModal   = document.getElementById('redflag-modal');
+const leaderboardModal = document.getElementById('leaderboard-modal');
+const teamScreen     = document.getElementById('team-screen');
 const btnLegit = document.getElementById('btn-legit');
 const btnPhish = document.getElementById('btn-phish');
 
+// --- Team registration ---
+
+async function joinTeam(name) {
+    const errorEl = document.getElementById('team-error');
+    const btn     = document.getElementById('btn-join-team');
+    btn.disabled  = true;
+    btn.textContent = 'Joining…';
+    errorEl.classList.add('hidden');
+
+    try {
+        const res  = await fetch(`${API}/api/teams`, {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify({ name })
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+            throw new Error(data.error || 'Server error');
+        }
+
+        teamId   = data.id;
+        teamName = data.name;
+
+        document.getElementById('team-name-display').textContent = `Team: ${teamName}`;
+        document.getElementById('team-name-display').classList.remove('hidden');
+        document.getElementById('btn-leaderboard').classList.remove('hidden');
+
+        teamScreen.classList.add('hidden');
+        loadMessage();
+    } catch (err) {
+        errorEl.textContent = err.message === 'Failed to fetch'
+            ? 'Cannot reach server. Make sure app.py is running.'
+            : err.message;
+        errorEl.classList.remove('hidden');
+        btn.disabled    = false;
+        btn.textContent = 'Join / Create Team →';
+    }
+}
+
+document.getElementById('btn-join-team').addEventListener('click', () => {
+    const name = document.getElementById('team-name-input').value.trim();
+    if (!name) {
+        const e = document.getElementById('team-error');
+        e.textContent = 'Please enter a team name.';
+        e.classList.remove('hidden');
+        return;
+    }
+    joinTeam(name);
+});
+
+document.getElementById('team-name-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('btn-join-team').click();
+});
+
+// --- Score submission ---
+
+async function submitScore(id, s) {
+    const res  = await fetch(`${API}/api/scores`, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ team_id: id, score: s })
+    });
+    if (!res.ok) throw new Error('Score submission failed');
+    return res.json();
+}
+
+// --- Leaderboard ---
+
+async function fetchLeaderboard() {
+    const res  = await fetch(`${API}/api/leaderboard`);
+    if (!res.ok) throw new Error('Could not load leaderboard');
+    return res.json();
+}
+
+function renderLeaderboard(rows) {
+    const body = document.getElementById('leaderboard-body');
+    if (!rows.length) {
+        body.innerHTML = '<p class="leaderboard-loading">No scores yet.</p>';
+        return;
+    }
+    const medals = ['🥇', '🥈', '🥉'];
+    body.innerHTML = `
+        <table class="leaderboard-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Team</th>
+                    <th>Total</th>
+                    <th>Plays</th>
+                    <th>Avg</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${rows.map((r, i) => `
+                    <tr class="${r.name === teamName ? 'leaderboard-own-row' : ''}">
+                        <td>${medals[i] || i + 1}</td>
+                        <td class="leaderboard-team-name">${escapeHtml(r.name)}</td>
+                        <td><strong>${r.total_score}</strong></td>
+                        <td>${r.play_count}</td>
+                        <td>${Math.round(r.avg_score)}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    `;
+}
+
+async function showLeaderboard() {
+    document.getElementById('leaderboard-body').innerHTML = '<p class="leaderboard-loading">Loading…</p>';
+    leaderboardModal.classList.remove('hidden');
+    try {
+        const rows = await fetchLeaderboard();
+        renderLeaderboard(rows);
+    } catch {
+        document.getElementById('leaderboard-body').innerHTML =
+            '<p class="leaderboard-loading">Could not load leaderboard.</p>';
+    }
+}
+
+document.getElementById('btn-leaderboard').addEventListener('click', showLeaderboard);
+document.getElementById('btn-close-leaderboard').addEventListener('click', () => {
+    leaderboardModal.classList.add('hidden');
+});
+
+function escapeHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// --- Core game logic ---
+
 function loadMessage() {
     const msg = messages[currentIndex];
-    gameState = 'classify';
+    gameState  = 'classify';
     btnLegit.disabled = false;
     btnPhish.disabled = false;
 
     const badge = document.getElementById('type-badge');
     badge.textContent = msg.type === 'sms' ? 'SMS' : 'EMAIL';
-    badge.className = 'type-badge type-' + msg.type;
+    badge.className   = 'type-badge type-' + msg.type;
 
     if (msg.type === 'email') {
         emailView.classList.remove('hidden');
         smsView.classList.add('hidden');
-        document.getElementById('email-sender').textContent = msg.sender;
+        document.getElementById('email-sender').textContent    = msg.sender;
         document.getElementById('email-recipient').textContent = msg.recipient;
-        document.getElementById('email-subject').textContent = msg.subject;
-        document.getElementById('email-date').textContent = msg.date;
-        document.getElementById('email-body').textContent = msg.body;
+        document.getElementById('email-subject').textContent   = msg.subject;
+        document.getElementById('email-date').textContent      = msg.date;
+        document.getElementById('email-body').textContent      = msg.body;
     } else {
         emailView.classList.add('hidden');
         smsView.classList.remove('hidden');
-        document.getElementById('sms-from').textContent = msg.from;
-        document.getElementById('sms-number').textContent = msg.senderNumber;
+        document.getElementById('sms-from').textContent      = msg.from;
+        document.getElementById('sms-number').textContent    = msg.senderNumber;
         document.getElementById('sms-timestamp').textContent = msg.timestamp;
-        document.getElementById('sms-body').textContent = msg.body;
+        document.getElementById('sms-body').textContent      = msg.body;
     }
 
     document.getElementById('level').textContent = currentIndex + 1;
@@ -267,7 +406,7 @@ function handleGuess(isGuessPhish) {
     btnLegit.disabled = true;
     btnPhish.disabled = true;
 
-    const msg = messages[currentIndex];
+    const msg       = messages[currentIndex];
     const isCorrect = isGuessPhish === msg.isPhish;
 
     if (isCorrect) {
@@ -291,33 +430,26 @@ function showRedFlagQuestion(msg) {
     gameState = 'redflag';
     const optionsEl = document.getElementById('redflag-options');
     optionsEl.innerHTML = '';
-
-    const shuffled = [...msg.redFlags].sort(() => Math.random() - 0.5);
-    shuffled.forEach(flag => {
+    [...msg.redFlags].sort(() => Math.random() - 0.5).forEach(flag => {
         const btn = document.createElement('button');
         btn.className = 'redflag-btn';
         btn.textContent = flag.text;
         btn.addEventListener('click', () => handleRedFlagGuess(flag.correct));
         optionsEl.appendChild(btn);
     });
-
     redflagModal.classList.remove('hidden');
 }
 
 function handleRedFlagGuess(isCorrect) {
     redflagModal.classList.add('hidden');
-    if (isCorrect) {
-        score += 50;
-        updateScore();
-    }
+    if (isCorrect) { score += 50; updateScore(); }
     showFeedback(true, isCorrect);
 }
 
 function showFeedback(correct, bonusCorrect) {
     gameState = 'feedback';
-    const title = document.getElementById('feedback-title');
+    const title   = document.getElementById('feedback-title');
     const bonusEl = document.getElementById('feedback-bonus');
-
     title.textContent = correct ? 'Correct!' : 'Incorrect!';
     title.style.color = correct ? '#27ae60' : '#e74c3c';
     bonusEl.classList.toggle('hidden', !bonusCorrect);
@@ -325,31 +457,44 @@ function showFeedback(correct, bonusCorrect) {
     feedbackModal.classList.remove('hidden');
 }
 
-function updateScore() {
-    document.getElementById('score').textContent = score;
-}
+function updateScore()  { document.getElementById('score').textContent = score; }
 
 function updateStreakDisplay() {
-    const display = document.getElementById('streak-display');
+    const d = document.getElementById('streak-display');
     document.getElementById('streak-count').textContent = streak;
-    display.classList.toggle('hidden', streak < 2);
+    d.classList.toggle('hidden', streak < 2);
 }
 
 function updateProgressBar() {
-    const pct = (currentIndex / messages.length) * 100;
-    document.getElementById('progress-bar').style.width = pct + '%';
+    document.getElementById('progress-bar').style.width =
+        (currentIndex / messages.length * 100) + '%';
 }
 
-function showGameOver() {
-    const phishCount = messages.filter(m => m.isPhish && m.redFlags).length;
-    const maxScore = messages.length * 100 + phishCount * 50;
-    const pct = Math.round((score / maxScore) * 100);
+document.getElementById('btn-legit').addEventListener('click', () => handleGuess(false));
+document.getElementById('btn-phish').addEventListener('click', () => handleGuess(true));
+
+document.getElementById('btn-next').addEventListener('click', () => {
+    feedbackModal.classList.add('hidden');
+    currentIndex++;
+    if (currentIndex < messages.length) {
+        loadMessage();
+    } else {
+        showGameOver();
+    }
+});
+
+// --- Game over ---
+
+async function showGameOver() {
+    const phishWithFlags = messages.filter(m => m.isPhish && m.redFlags).length;
+    const maxScore = messages.length * 100 + phishWithFlags * 50;
+    const pct      = Math.round((score / maxScore) * 100);
 
     let grade, gradeColor;
-    if (pct >= 90) { grade = 'Expert Analyst'; gradeColor = '#27ae60'; }
-    else if (pct >= 70) { grade = 'Solid Defender'; gradeColor = '#2980b9'; }
-    else if (pct >= 50) { grade = 'Needs Practice'; gradeColor = '#e67e22'; }
-    else { grade = 'Stay Vigilant'; gradeColor = '#e74c3c'; }
+    if (pct >= 90)      { grade = 'Expert Analyst';  gradeColor = '#27ae60'; }
+    else if (pct >= 70) { grade = 'Solid Defender';  gradeColor = '#2980b9'; }
+    else if (pct >= 50) { grade = 'Needs Practice';  gradeColor = '#e67e22'; }
+    else                { grade = 'Stay Vigilant';   gradeColor = '#e74c3c'; }
 
     document.querySelector('main').innerHTML = `
         <div class="game-over">
@@ -364,23 +509,47 @@ function showGameOver() {
                 <div class="breakdown-row"><span>SMS / Smishing</span><span>${messages.filter(m => m.type === 'sms').length}</span></div>
                 <div class="breakdown-row"><span>Score</span><span>${pct}%</span></div>
             </div>
-            <button class="btn btn-next" onclick="location.reload()">Play Again</button>
+            <div id="team-result" class="team-result">
+                <div class="team-result-loading">Submitting score to team…</div>
+            </div>
+            <div class="game-over-actions">
+                <button class="btn btn-next" onclick="location.reload()">Play Again</button>
+                <button class="btn btn-leaderboard-gameover" id="btn-gameover-leaderboard">🏆 Leaderboard</button>
+            </div>
         </div>
     `;
     document.getElementById('progress-bar').style.width = '100%';
-}
 
-btnLegit.addEventListener('click', () => handleGuess(false));
-btnPhish.addEventListener('click', () => handleGuess(true));
+    document.getElementById('btn-gameover-leaderboard').addEventListener('click', showLeaderboard);
 
-document.getElementById('btn-next').addEventListener('click', () => {
-    feedbackModal.classList.add('hidden');
-    currentIndex++;
-    if (currentIndex < messages.length) {
-        loadMessage();
+    // Submit score and update team result panel
+    if (teamId !== null) {
+        try {
+            const result = await submitScore(teamId, score);
+            document.getElementById('team-result').innerHTML = `
+                <div class="team-result-card">
+                    <div class="team-result-name">Team: ${escapeHtml(teamName)}</div>
+                    <div class="team-result-stats">
+                        <div class="team-stat">
+                            <span class="team-stat-value">${result.total_score}</span>
+                            <span class="team-stat-label">Team Total</span>
+                        </div>
+                        <div class="team-stat">
+                            <span class="team-stat-value">#${result.rank}</span>
+                            <span class="team-stat-label">Rank</span>
+                        </div>
+                        <div class="team-stat">
+                            <span class="team-stat-value">${result.play_count}</span>
+                            <span class="team-stat-label">Plays</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        } catch {
+            document.getElementById('team-result').innerHTML =
+                '<p class="team-result-error">Could not submit score — check server connection.</p>';
+        }
     } else {
-        showGameOver();
+        document.getElementById('team-result').innerHTML = '';
     }
-});
-
-loadMessage();
+}
