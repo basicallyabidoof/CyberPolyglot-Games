@@ -720,13 +720,14 @@ const messages = [
 ];
 
 // --- State ---
-let currentIndex      = 0;
-let score             = 0;
-let streak            = 0;
-let gameState         = 'classify';
-let teamId            = null;
-let teamName          = null;
-let shuffledMessages  = [];
+let currentIndex        = 0;
+let score               = 0;
+let streak              = 0;
+let gameState           = 'classify';
+let teamId              = null;
+let teamName            = null;
+let shuffledMessages    = [];
+let lastSubmittedScore  = 0;   // tracks what has already been posted to the server
 
 function shuffle(arr) {
     for (let i = arr.length - 1; i > 0; i--) {
@@ -750,7 +751,7 @@ const SESSION_KEY = 'phishcatchers_session';
 function saveSession() {
     if (!teamId) return;
     localStorage.setItem(SESSION_KEY, JSON.stringify({
-        teamId, teamName, currentIndex, score, streak,
+        teamId, teamName, currentIndex, score, streak, lastSubmittedScore,
         messageOrder: shuffledMessages.map(m => messages.indexOf(m))
     }));
 }
@@ -923,10 +924,11 @@ function showResumePrompt(saved) {
 
 document.getElementById('btn-resume').addEventListener('click', () => {
     const saved = loadSession();
-    currentIndex     = saved.currentIndex;
-    score            = saved.score;
-    streak           = saved.streak || 0;
-    shuffledMessages = saved.messageOrder.map(i => messages[i]);
+    currentIndex       = saved.currentIndex;
+    score              = saved.score;
+    streak             = saved.streak || 0;
+    lastSubmittedScore = saved.lastSubmittedScore || 0;
+    shuffledMessages   = saved.messageOrder.map(i => messages[i]);
     updateScore();
     document.getElementById('resume-modal').classList.add('hidden');
     loadMessage();
@@ -941,9 +943,36 @@ document.getElementById('btn-start-fresh').addEventListener('click', () => {
 
 // --- Save & Quit ---
 
-document.getElementById('btn-save-quit').addEventListener('click', () => {
+document.getElementById('btn-save-quit').addEventListener('click', async () => {
+    // Show a saving indicator immediately
+    const main = document.querySelector('main');
+    const progressBar = document.getElementById('progress-bar');
+    const pct = Math.round(currentIndex / shuffledMessages.length * 100);
+
+    main.innerHTML = `
+        <div class="game-over">
+            <div class="game-over-icon">💾</div>
+            <h2>Saving…</h2>
+            <p style="text-align:center;color:#555">Posting your score to the leaderboard…</p>
+        </div>
+    `;
+    progressBar.style.width = pct + '%';
+
+    // Submit points earned since last save (avoid double-counting on resume)
+    const newPoints = score - lastSubmittedScore;
+    let teamTotal = score;
+    if (teamId !== null && newPoints > 0) {
+        try {
+            const result = await submitScore(teamId, newPoints);
+            lastSubmittedScore = score;
+            teamTotal = result.total_score;
+        } catch { /* server may be unreachable — continue to save locally */ }
+    }
+
+    // Persist to localStorage so the game can be resumed
     saveSession();
-    document.querySelector('main').innerHTML = `
+
+    main.innerHTML = `
         <div class="game-over">
             <div class="game-over-icon">💾</div>
             <h2>Progress Saved!</h2>
@@ -954,13 +983,13 @@ document.getElementById('btn-save-quit').addEventListener('click', () => {
             <div class="score-breakdown">
                 <div class="breakdown-row"><span>Challenge</span><span>${currentIndex + 1} / ${shuffledMessages.length}</span></div>
                 <div class="breakdown-row"><span>Score so far</span><span>${score}</span></div>
+                <div class="breakdown-row"><span>Team total</span><span>${teamTotal}</span></div>
                 <div class="breakdown-row"><span>Team</span><span>${escapeHtml(teamName)}</span></div>
             </div>
             <button class="btn btn-next" style="margin-top:20px" onclick="location.reload()">Back to Start</button>
         </div>
     `;
-    document.getElementById('progress-bar').style.width =
-        (currentIndex / shuffledMessages.length * 100) + '%';
+    progressBar.style.width = pct + '%';
 });
 
 // --- Core game logic ---
@@ -1124,10 +1153,11 @@ async function showGameOver() {
 
     document.getElementById('btn-gameover-leaderboard').addEventListener('click', showLeaderboard);
 
-    // Submit score and update team result panel
+    // Submit only the points not yet sent (prevents double-counting after Save & Quit)
+    const newPoints = score - lastSubmittedScore;
     if (teamId !== null) {
         try {
-            const result = await submitScore(teamId, score);
+            const result = await submitScore(teamId, newPoints > 0 ? newPoints : 0);
             document.getElementById('team-result').innerHTML = `
                 <div class="team-result-card">
                     <div class="team-result-name">Team: ${escapeHtml(teamName)}</div>
