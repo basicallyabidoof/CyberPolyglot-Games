@@ -99,10 +99,9 @@ def leaderboard():
     try:
         rows = db.execute('''
             SELECT name, total_score, play_count,
-                   CASE WHEN play_count > 0
-                        THEN ROUND(CAST(total_score AS REAL) / play_count)
-                        ELSE 0 END AS avg_score
+                   ROUND(CAST(total_score AS REAL) / play_count) AS avg_score
             FROM teams
+            WHERE play_count > 0
             ORDER BY total_score DESC
             LIMIT 25
         ''').fetchall()
