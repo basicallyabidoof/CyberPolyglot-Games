@@ -910,6 +910,53 @@ document.getElementById('btn-close-leaderboard').addEventListener('click', () =>
     leaderboardModal.classList.add('hidden');
 });
 
+// --- Leaderboard reset ---
+
+document.getElementById('btn-reset-toggle').addEventListener('click', () => {
+    const form = document.getElementById('reset-form');
+    const msg  = document.getElementById('reset-message');
+    form.classList.toggle('hidden');
+    msg.classList.add('hidden');
+    if (!form.classList.contains('hidden')) {
+        document.getElementById('reset-password').value = '';
+        document.getElementById('reset-password').focus();
+    }
+});
+
+document.getElementById('reset-password').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('btn-reset-confirm').click();
+});
+
+document.getElementById('btn-reset-confirm').addEventListener('click', async () => {
+    const pw    = document.getElementById('reset-password').value;
+    const msgEl = document.getElementById('reset-message');
+    msgEl.classList.add('hidden');
+
+    try {
+        const res  = await fetch(`${API}/api/reset`, {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify({ password: pw })
+        });
+        const data = await res.json();
+        msgEl.classList.remove('hidden');
+
+        if (res.ok) {
+            msgEl.textContent = '✓ Leaderboard cleared.';
+            msgEl.style.color = '#27ae60';
+            document.getElementById('reset-form').classList.add('hidden');
+            renderLeaderboard([]);
+        } else {
+            msgEl.textContent = '✗ ' + (data.error || 'Reset failed.');
+            msgEl.style.color = '#e74c3c';
+        }
+    } catch {
+        msgEl.classList.remove('hidden');
+        msgEl.textContent = '✗ Could not reach server.';
+        msgEl.style.color = '#e74c3c';
+    }
+});
+
 function escapeHtml(s) {
     return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
