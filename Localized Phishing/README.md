@@ -15,10 +15,10 @@ While most anti-phishing programs focus on universal red flags, this game emphas
 
 | Feature | Description |
 |---|---|
-| **16 challenges** | 8 localized emails + 8 SMS/smishing texts across 10+ countries |
+| **50 challenges** | 25 localized emails + 25 SMS/smishing texts across 20+ countries |
 | **Spot the Red Flag** | After correctly identifying a phish, pick *why* it's suspicious from 4 options for a +50 bonus |
 | **Streak counter** | 🔥 badge appears after 2+ consecutive correct answers |
-| **Progress bar** | Visual progress across all 16 challenges |
+| **Progress bar** | Visual progress across all 50 challenges |
 | **Grade system** | Expert Analyst → Solid Defender → Needs Practice → Stay Vigilant |
 | **Team leaderboard** | Conference mode: teams pool scores across devices in real time |
 
@@ -90,9 +90,9 @@ Then start `app.py` again.
 |---|---|
 | Correct classification (Legit/Phishing) | +100 |
 | Correct red flag identification | +50 bonus |
-| Maximum possible score | **2,100** |
+| Maximum possible score | **6,900** |
 
-Team scores are **cumulative** — every team member's run adds to the team total. A team of four playing through all 16 challenges together can score up to 8,400 points.
+Team scores are **cumulative** — every team member's run adds to the team total. A team of four playing through all 50 challenges together can score up to 27,600 points.
 
 ---
 

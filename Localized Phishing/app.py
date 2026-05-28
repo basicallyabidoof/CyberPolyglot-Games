@@ -61,7 +61,7 @@ def submit_score():
     team_id = data.get('team_id')
     score   = data.get('score')
 
-    if not isinstance(team_id, int) or not isinstance(score, int) or not (0 <= score <= 2100):
+    if not isinstance(team_id, int) or not isinstance(score, int) or not (0 <= score <= 6900):
         return jsonify({'error': 'Invalid team_id or score'}), 400
 
     db = get_db()
