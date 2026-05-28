@@ -267,6 +267,13 @@ main {
     word-break: break-word;
 }
 
+/* RTL languages: Arabic, Urdu, Hebrew — flip bubble tail to right */
+.sms-bubble[dir="rtl"] {
+    border-radius: 18px 18px 4px 18px;
+    text-align: right;
+    font-size: 1rem;
+}
+
 /* Action buttons */
 .action-buttons {
     display: flex;

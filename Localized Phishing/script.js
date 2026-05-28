@@ -449,6 +449,273 @@ const messages = [
         body: "e&: رصيدك الحالي 45.30 درهم. لإضافة رصيد أو تفعيل باقة، اتصل بـ 101 أو استخدم تطبيق My e&. لا تشارك بياناتك مع أي شخص.",
         isPhish: false,
         explanation: "Legitimate! This Arabic-language e& (formerly Etisalat, UAE) balance notification shows only your current credit balance and directs you to call 101 or use the official app. It contains no link, no urgency, and no request for personal details. The reminder 'لا تشارك بياناتك' (don't share your information) is a hallmark of genuine telecoms security messaging."
+    },
+
+    // ── ROUND 3: 18 MORE SCENARIOS ──
+
+    // Emails
+    {
+        type: 'email',
+        sender: "support@sberbank-bezopasnost.ru",
+        recipient: "klient@example.ru",
+        subject: "Ваша карта Сбербанка заблокирована",
+        date: "пятница, 15 марта",
+        body: "Уважаемый клиент,\n\nМы обнаружили подозрительную активность на вашей карте. В целях безопасности ваша карта была временно заблокирована.\n\nДля разблокировки необходимо подтвердить ваши данные в течение 24 часов:\n\nhttp://sberbank-bezopasnost.ru/razblokir\n\nС уважением,\nСлужба безопасности Сбербанка",
+        isPhish: true,
+        explanation: "Phishing! The real Sberbank uses sberbank.ru — 'sberbank-bezopasnost.ru' (безопасность = security) is a fake look-alike domain. Note: in Russian, days of the week and months are correctly written in lowercase, so 'пятница' is not a red flag. The fake domain and pressure to confirm card details within 24 hours are the real tells.",
+        redFlags: [
+            { text: "Fake domain — Sberbank uses sberbank.ru, not sberbank-bezopasnost.ru", correct: true },
+            { text: "'пятница' should be capitalised — Russian days are always uppercase", correct: false },
+            { text: "Russian banks never communicate with customers by email", correct: false },
+            { text: "The greeting 'Уважаемый клиент' is too formal for Sberbank", correct: false }
+        ]
+    },
+    {
+        type: 'email',
+        sender: "security@alpha-bank-gr.com",
+        recipient: "pelatis@example.gr",
+        subject: "Σημαντική ειδοποίηση: Ο λογαριασμός σας έχει ανασταλεί",
+        date: "Τρίτη, 12 Μαρτίου",
+        body: "Αγαπητέ πελάτη,\n\nΕντοπίσαμε ύποπτη δραστηριότητα στον λογαριασμό σας. Για λόγους ασφαλείας, ο λογαριασμός σας έχει προσωρινά ανασταλεί.\n\nΠαρακαλούμε επαληθεύστε τα στοιχεία σας εντός 48 ωρών για να αποφύγετε μόνιμη απενεργοποίηση:\n\nhttp://alpha-bank-gr.com/verify\n\nΜε εκτίμηση,\nΤμήμα Ασφαλείας Alpha Bank",
+        isPhish: true,
+        explanation: "Phishing! Alpha Bank Greece uses alpha.gr — 'alpha-bank-gr.com' embeds the country code in the domain path, a pattern used by phishing campaigns worldwide to look official. The '48 ωρών' (48 hours) deadline and threat of 'μόνιμη απενεργοποίηση' (permanent deactivation) are urgency tactics. Legitimate Greek bank notices direct you to the official Alpha Web Banking portal.",
+        redFlags: [
+            { text: "Fake domain — Alpha Bank Greece uses alpha.gr, not alpha-bank-gr.com", correct: true },
+            { text: "Greek bank security emails are always written in English", correct: false },
+            { text: "The threat of permanent deactivation is always exaggerated", correct: false },
+            { text: "'Αγαπητέ πελάτη' is too informal for a bank security notice", correct: false }
+        ]
+    },
+    {
+        type: 'email',
+        sender: "notificacion@sat-mx.com",
+        recipient: "contribuyente@example.com.mx",
+        subject: "SAT: Tiene una devolución de impuestos pendiente — $4,820 MXN",
+        date: "lunes, 18 de marzo",
+        body: "Estimado contribuyente,\n\nEl Servicio de Administración Tributaria (SAT) le informa que tiene una devolución de impuestos por $4,820.00 MXN pendiente de reclamar.\n\nPara recibir su devolución, ingrese sus datos bancarios en el siguiente enlace antes del 31 de marzo:\n\nhttp://sat-mx.com/devolucion\n\nAtentamente,\nServicio de Administración Tributaria\nSAT México",
+        isPhish: true,
+        explanation: "Phishing! Mexico's SAT (tax authority) uses sat.gob.mx — all Mexican government sites end in .gob.mx. 'sat-mx.com' is entirely fake. The real SAT processes refunds automatically to your registered bank account; it never emails asking you to input banking details via a link. The 'before March 31' deadline is a pressure tactic.",
+        redFlags: [
+            { text: "Fake domain — Mexican government sites use .gob.mx (sat.gob.mx)", correct: true },
+            { text: "SAT refunds are always under $1,000 MXN", correct: false },
+            { text: "Mexican government communications are always in English", correct: false },
+            { text: "A March 31 deadline for a tax refund is suspicious", correct: false }
+        ]
+    },
+    {
+        type: 'email',
+        sender: "cskh@vpbank-security.com",
+        recipient: "khachhang@example.vn",
+        subject: "VPBank: Tài khoản của bạn đã bị tạm khóa",
+        date: "Thứ Hai, 11 tháng 3",
+        body: "Kính gửi Quý khách hàng,\n\nChúng tôi phát hiện hoạt động bất thường trên tài khoản của bạn. Để bảo vệ tài khoản, chúng tôi đã tạm thời khóa tài khoản của bạn.\n\nVui lòng xác minh thông tin trong vòng 24 giờ để tránh bị khóa vĩnh viễn:\n\nhttp://vpbank-security.com/xacminh\n\nTrân trọng,\nVPBank Dịch vụ Khách hàng",
+        isPhish: true,
+        explanation: "Phishing! VPBank's real domain is vpbank.com.vn — all legitimate Vietnamese bank domains use .com.vn or .vn. 'vpbank-security.com' is fake. The '24 giờ' (24 hours) deadline and threat of 'khóa vĩnh viễn' (permanent lock) follow the universal urgency template. Real VPBank security notices direct customers to the VPBank NEO app only.",
+        redFlags: [
+            { text: "Fake domain — VPBank uses vpbank.com.vn, not vpbank-security.com", correct: true },
+            { text: "Vietnamese banks never send email security alerts", correct: false },
+            { text: "'Kính gửi Quý khách hàng' is too formal for a bank security alert", correct: false },
+            { text: "A 24-hour deadline is not used by legitimate Vietnamese banks", correct: false }
+        ]
+    },
+    {
+        type: 'email',
+        sender: "melding@nav-norge.com",
+        recipient: "bruker@example.no",
+        subject: "NAV: Du har en ubehandlet utbetaling",
+        date: "mandag, 4. mars",
+        body: "Hei,\n\nDu har en ubehandlet utbetaling på kr 2 340 fra NAV. For å motta betalingen må du bekrefte bankopplysningene dine innen 5 dager.\n\nKlikk her for å bekrefte:\nhttp://nav-norge.com/bekreft\n\nMed vennlig hilsen,\nNAV Utbetalingstjenesten",
+        isPhish: true,
+        explanation: "Phishing! Norway's NAV (labour and welfare administration) uses nav.no — 'nav-norge.com' is a fake domain. NAV payments are processed automatically to your registered Norwegian bank account via Altinn; NAV never emails asking you to 'confirm bank details' via a link. Note: in Norwegian, days ARE lowercase ('mandag' is correct) — not a tell here.",
+        redFlags: [
+            { text: "Fake domain — NAV uses nav.no, not nav-norge.com", correct: true },
+            { text: "'mandag' should be capitalised in Norwegian", correct: false },
+            { text: "Norwegian welfare payments are always higher than kr 2,340", correct: false },
+            { text: "NAV only communicates in Bokmål, never Nynorsk", correct: false }
+        ]
+    },
+    {
+        type: 'email',
+        sender: "noreply@singpass-gov.com",
+        recipient: "resident@example.sg",
+        subject: "SingPass: Action Required — Verify Your Identity",
+        date: "Wednesday, 6 March",
+        body: "Dear SingPass User,\n\nWe have detected suspicious login attempts on your SingPass account. Your account has been temporarily suspended for security reasons.\n\nPlease verify your identity within 48 hours to restore access:\n\nhttp://singpass-gov.com/verify\n\nFailure to verify will result in permanent account deactivation.\n\nRegards,\nSingPass Security Team\nGovTech Singapore",
+        isPhish: true,
+        explanation: "Phishing! All Singapore government digital services use .gov.sg — the real SingPass is singpass.gov.sg. 'singpass-gov.com' is a fake domain designed to look official. The real SingPass sends notifications through the SingPass app, never via email with external links. GovTech Singapore would never threaten 'permanent account deactivation'.",
+        redFlags: [
+            { text: "Fake domain — Singapore government services always use .gov.sg", correct: true },
+            { text: "SingPass emails are always in both English and Mandarin", correct: false },
+            { text: "GovTech Singapore never threatens permanent deactivation", correct: false },
+            { text: "The greeting 'Dear SingPass User' is too generic", correct: false }
+        ]
+    },
+    {
+        type: 'email',
+        sender: "refunds@ird-nz.com",
+        recipient: "taxpayer@example.co.nz",
+        subject: "Inland Revenue: Your Tax Refund of NZ$892 Is Ready",
+        date: "Tuesday, 19 March",
+        body: "Dear Taxpayer,\n\nFollowing our review of your tax returns, you are entitled to a refund of NZ$892.00.\n\nTo process your refund, please verify your banking details via the link below. Please action this within 7 days or the refund will be forfeited.\n\nhttp://ird-nz.com/refund/claim\n\nKind regards,\nInland Revenue Department\nTe Tari Taake",
+        isPhish: true,
+        explanation: "Phishing! New Zealand's Inland Revenue uses ird.govt.nz — all NZ government sites end in .govt.nz. 'ird-nz.com' is fake. The real IRD deposits refunds automatically to your bank account registered in myIR — it never emails asking you to 'verify banking details'. The Māori name 'Te Tari Taake' is included to look authentic, but the domain is conclusive.",
+        redFlags: [
+            { text: "Fake domain — NZ government sites use .govt.nz (ird.govt.nz)", correct: true },
+            { text: "IRD refunds in New Zealand are always paid by cheque", correct: false },
+            { text: "Including the Māori name 'Te Tari Taake' is a sign of a fake email", correct: false },
+            { text: "A 7-day deadline is not how the IRD operates", correct: false }
+        ]
+    },
+    {
+        type: 'email',
+        sender: "seguranca@cgd-netbanking.pt",
+        recipient: "cliente@example.pt",
+        subject: "CGD: A sua conta foi temporariamente suspensa",
+        date: "segunda-feira, 11 de março",
+        body: "Exmo. Cliente,\n\nInformamos que a sua conta no Caixadirect foi temporariamente suspensa devido a atividade suspeita.\n\nPara reativar a sua conta, por favor confirme os seus dados de acesso nas próximas 24 horas:\n\nhttp://cgd-netbanking.pt/reativar\n\nCom os melhores cumprimentos,\nCaixa Geral de Depósitos — Segurança",
+        isPhish: true,
+        explanation: "Phishing! CGD (Caixa Geral de Depósitos), Portugal's largest state bank, uses cgd.pt — 'cgd-netbanking.pt' is a fake look-alike. Note: in Portuguese, days of the week are lowercase ('segunda-feira' is correct) — not a red flag. The European Portuguese formal style ('a sua', 'os seus') makes it sound authentic, but the fake domain is the decisive tell.",
+        redFlags: [
+            { text: "Fake domain — CGD uses cgd.pt, not cgd-netbanking.pt", correct: true },
+            { text: "'segunda-feira' must be capitalised — Portuguese days are always uppercase", correct: false },
+            { text: "European Portuguese formal style ('a sua') is a sign of inauthenticity", correct: false },
+            { text: "Portuguese banks always write in both Portuguese and English", correct: false }
+        ]
+    },
+    {
+        type: 'email',
+        sender: "nordea@nordea.fi",
+        recipient: "asiakas@example.fi",
+        subject: "Nordea: Kuukausittainen tiliotteesi on saatavilla",
+        date: "Tiistai, 5. maaliskuuta",
+        body: "Hei,\n\nKuukausittainen tiliotteesi on nyt saatavilla Nordea Verkkopankissa.\n\nKirjaudu sisään osoitteessa nordea.fi tai Nordea Mobile -sovelluksessa.\n\nYstävällisin terveisin,\nNordea Pankki Suomi",
+        isPhish: false,
+        explanation: "Legitimate! This Finnish Nordea bank notification uses the correct nordea.fi domain, contains no clickable link (it directs you to type nordea.fi yourself or open the app), and simply informs you that a document is available. It makes no requests, applies no urgency, and asks for no credentials."
+    },
+
+    // SMS
+    {
+        type: 'sms',
+        from: "Госуслуги",
+        senderNumber: "Gosuslugi",
+        timestamp: "Today 3:42 PM",
+        body: "Госуслуги: На ваш аккаунт зафиксирован подозрительный вход. Подтвердите личность в течение 2 часов: gosuslugi-proverka.ru/podtverdit",
+        isPhish: true,
+        explanation: "Smishing! Russia's official government services portal uses gosuslugi.ru — 'gosuslugi-proverka.ru' (proverka = verification) is a fake look-alike. This is one of Russia's most common smishing templates, targeting the millions of citizens registered on the portal. The 2-hour window is extreme urgency pressure. Real Gosuslugi verification is done through the app or official site only.",
+        redFlags: [
+            { text: "Fake domain — Gosuslugi uses gosuslugi.ru, not gosuslugi-proverka.ru", correct: true },
+            { text: "'Госуслуги' is a misspelling of the official service name", correct: false },
+            { text: "Russian government services never send SMS notifications", correct: false },
+            { text: "A 2-hour deadline is always a sign of a phishing attempt", correct: false }
+        ]
+    },
+    {
+        type: 'sms',
+        from: "Viettel",
+        senderNumber: "Viettel",
+        timestamp: "Today 11:22 AM",
+        body: "Viettel: Số điện thoại của bạn được tặng gói DATA 5GB miễn phí. Kích hoạt ngay trước 23:59 hôm nay: viettel-kuyenmai.com/kichhoat",
+        isPhish: true,
+        explanation: "Smishing! Viettel's real domain is viettel.vn — 'viettel-kuyenmai.com' is fake. The domain misspells 'khuyến mãi' (promotion) as 'kuyenmai' — dropping the 'kh' cluster, a subtle error native Vietnamese speakers would catch. Free data prize offers are the top mobile smishing lure in Vietnam, designed to be too tempting to verify.",
+        redFlags: [
+            { text: "Fake domain — Viettel uses viettel.vn, not viettel-kuyenmai.com", correct: true },
+            { text: "'kuyenmai' misspells 'khuyến mãi' — a tell for non-Vietnamese writers", correct: false },
+            { text: "Viettel never offers free data promotions to customers", correct: false },
+            { text: "The same-day 23:59 deadline is always suspicious", correct: false }
+        ]
+    },
+    {
+        type: 'sms',
+        from: "GCash",
+        senderNumber: "GCash",
+        timestamp: "Today 2:05 PM",
+        body: "GCash: Your account has been flagged for unusual activity. To avoid suspension, verify your GCash MPIN now: gcash-verify.info/secure",
+        isPhish: true,
+        explanation: "Smishing! GCash is the Philippines' dominant mobile wallet and a top smishing target. The real GCash uses gcash.com.ph — 'gcash-verify.info' is fake. Critically, GCash will NEVER ask for your MPIN (Mobile PIN) via SMS. Requesting a PIN — even appearing to come from GCash — is always fraud. No legitimate financial service asks for your secret PIN through any channel.",
+        redFlags: [
+            { text: "No legitimate service ever asks for your MPIN/PIN via SMS or any link", correct: true },
+            { text: "GCash only uses gcash.com.ph — gcash-verify.info is a fake domain", correct: false },
+            { text: "GCash only sends SMS messages in Filipino, never English", correct: false },
+            { text: "The word 'flagged' is too technical for GCash communications", correct: false }
+        ]
+    },
+    {
+        type: 'sms',
+        from: "M-PESA",
+        senderNumber: "MPESA",
+        timestamp: "Today 9:33 AM",
+        body: "M-PESA: Dear Customer, your account will be deactivated due to KYC non-compliance. Update your details immediately: mpesa-kyc.com/update or call *234#",
+        isPhish: true,
+        explanation: "Smishing! This contains two simultaneous fakes. Real M-Pesa (Safaricom Kenya) has no domain — KYC updates are done at Safaricom shops or the MySafaricom app, never via SMS links. The USSD code '*234#' is also fake — genuine M-Pesa is accessed via *334#. Spotting either the fake link domain OR the wrong USSD code is enough.",
+        redFlags: [
+            { text: "Wrong USSD code — real M-Pesa uses *334#, not *234#", correct: true },
+            { text: "M-Pesa KYC is always completed in person at a Safaricom shop", correct: false },
+            { text: "M-Pesa never sends SMS messages in English", correct: false },
+            { text: "'Dear Customer' is too generic for an M-Pesa notification", correct: false }
+        ]
+    },
+    {
+        type: 'sms',
+        from: "Maybank",
+        senderNumber: "Maybank2u",
+        timestamp: "Today 4:17 PM",
+        body: "Maybank: Akaun anda telah dihadkan kerana aktiviti mencurigakan. Sila sahkan maklumat anda dalam masa 24 jam: maybank2u-secure.com/sahkan",
+        isPhish: true,
+        explanation: "Smishing! Maybank's real online banking portal is maybank2u.com.my — 'maybank2u-secure.com' drops the Malaysian .my country code and appends 'secure', a classic fake domain trick. This Malay-language smishing targets Malaysian Maybank2u users. Real Maybank security alerts direct you to log in through the official MAE app only, never via SMS links.",
+        redFlags: [
+            { text: "Fake domain — Maybank uses maybank2u.com.my, not maybank2u-secure.com", correct: true },
+            { text: "Maybank never sends SMS messages in Bahasa Malaysia", correct: false },
+            { text: "'Akaun anda' is grammatically incorrect in formal Malay", correct: false },
+            { text: "A 24-hour security deadline is not used by Malaysian banks", correct: false }
+        ]
+    },
+    {
+        type: 'sms',
+        from: "MobilePay",
+        senderNumber: "MobilePay",
+        timestamp: "Wed 10:14 AM",
+        body: "MobilePay: Din konto er blevet midlertidigt begrænset pga. mistænkelig aktivitet. Bekræft din identitet: mobilepay-sikker.dk/bekraeft",
+        isPhish: true,
+        explanation: "Smishing! MobilePay's real domain is mobilepay.dk — 'mobilepay-sikker.dk' (sikker = secure) is a fake look-alike. MobilePay communicates through its app exclusively; it never sends identity confirmation links via SMS. This campaign is especially effective in Denmark where MobilePay is used by roughly 90% of the population for everyday payments.",
+        redFlags: [
+            { text: "Fake domain — MobilePay uses mobilepay.dk, not mobilepay-sikker.dk", correct: true },
+            { text: "MobilePay only communicates through its app, never via SMS links", correct: false },
+            { text: "'pga.' is an unusual abbreviation in a professional SMS", correct: false },
+            { text: "Danish mobile payment services always write in English", correct: false }
+        ]
+    },
+    {
+        type: 'sms',
+        from: "HBL",
+        senderNumber: "HBL Bank",
+        timestamp: "Today 1:48 PM",
+        body: "HBL: آپ کا اکاؤنٹ مشکوک سرگرمی کی وجہ سے بند کر دیا گیا ہے۔ 24 گھنٹوں میں تصدیق کریں: hbl-verify.com/account",
+        isPhish: true,
+        explanation: "Smishing! HBL (Habib Bank Limited) Pakistan uses hbl.com — 'hbl-verify.com' is a fake domain. This Urdu-script text reads: 'Your account has been closed due to suspicious activity. Verify within 24 hours.' The authentic Urdu script makes it highly convincing to Pakistani users, but the fake domain is conclusive. Real HBL security issues are resolved through the HBL Mobile app or by calling 111-425-111.",
+        redFlags: [
+            { text: "Fake domain — HBL Pakistan uses hbl.com, not hbl-verify.com", correct: true },
+            { text: "Pakistani banks never send SMS messages in Urdu script", correct: false },
+            { text: "HBL always writes security alerts in English only", correct: false },
+            { text: "A 24-hour account closure notice is not how HBL operates", correct: false }
+        ]
+    },
+    {
+        type: 'sms',
+        from: "GTBank",
+        senderNumber: "GTBank",
+        timestamp: "Today 10:02 AM",
+        body: "GTBank: Your transaction OTP is 726451. Valid for 5 mins. GTBank will NEVER call or SMS you to request this OTP. Beware of fraudsters.",
+        isPhish: false,
+        explanation: "Legitimate! Guaranty Trust Bank (GTBank) Nigeria follows real OTP best practices: provides the code, gives a short validity window, and includes the explicit warning that GTBank will NEVER request your OTP by any channel. This anti-social-engineering statement — warning specifically about fraudsters who may call to request the code — is a hallmark of genuine Nigerian bank security communications."
+    },
+    {
+        type: 'sms',
+        from: "NZ Post",
+        senderNumber: "NZPost",
+        timestamp: "Today 7:55 AM",
+        body: "NZ Post: Your parcel NZP993847261 is out for delivery today. Track at nzpost.co.nz/track",
+        isPhish: false,
+        explanation: "Legitimate! Real NZ Post delivery notifications include a valid tracking number and link only to nzpost.co.nz — New Zealand's official postal service domain. There is no payment request, no urgency, and no request for personal information. This is exactly how a legitimate delivery notification should look."
     }
 ];
 
@@ -471,6 +738,11 @@ function shuffle(arr) {
 
 /** Always reference the active (shuffled) message via this helper */
 function currentMsg() { return shuffledMessages[currentIndex]; }
+
+/** Detect right-to-left scripts (Arabic, Urdu, Hebrew, Persian, etc.) */
+function isRTL(text) {
+    return /[֑-߿‏‫יִ-﷽ﹰ-ﻼ]/.test(text);
+}
 
 // --- Session persistence (localStorage) ---
 const SESSION_KEY = 'phishcatchers_session';
@@ -717,7 +989,9 @@ function loadMessage() {
         document.getElementById('sms-from').textContent      = msg.from;
         document.getElementById('sms-number').textContent    = msg.senderNumber;
         document.getElementById('sms-timestamp').textContent = msg.timestamp;
-        document.getElementById('sms-body').textContent      = msg.body;
+        const smsBodyEl = document.getElementById('sms-body');
+        smsBodyEl.textContent = msg.body;
+        smsBodyEl.dir = isRTL(msg.body) ? 'rtl' : 'ltr';
     }
 
     document.getElementById('level').textContent = currentIndex + 1;
