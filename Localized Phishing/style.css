@@ -267,6 +267,13 @@ main {
     word-break: break-word;
 }
 
+/* RTL languages: Arabic, Urdu, Hebrew — flip bubble tail to right */
+.sms-bubble[dir="rtl"] {
+    border-radius: 18px 18px 4px 18px;
+    text-align: right;
+    font-size: 1rem;
+}
+
 /* Action buttons */
 .action-buttons {
     display: flex;
@@ -530,6 +537,52 @@ main {
     letter-spacing: 0.5px;
 }
 
+/* Save & Quit button */
+.save-quit-wrap {
+    text-align: center;
+    margin-top: 14px;
+}
+
+.btn-save-quit {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: color 0.15s, background 0.15s;
+}
+
+.btn-save-quit:hover {
+    color: var(--text);
+    background: #f0f2f5;
+}
+
+/* Resume modal */
+.resume-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.btn-start-fresh {
+    background: none;
+    border: 2px solid var(--border);
+    color: var(--text-muted);
+    padding: 11px 28px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+}
+
+.btn-start-fresh:hover {
+    border-color: #aaa;
+    color: var(--text);
+}
+
 /* Team registration screen */
 .team-modal-content {
     max-width: 420px !important;
@@ -638,6 +691,65 @@ main {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+/* Leaderboard reset */
+.leaderboard-reset-section {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+}
+
+.btn-reset-toggle {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    padding: 5px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-family: inherit;
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.btn-reset-toggle:hover { color: #e74c3c; border-color: #e74c3c; }
+
+.reset-form {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.reset-form input[type="password"] {
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.88rem;
+    width: 150px;
+}
+
+.btn-reset-confirm {
+    background: #e74c3c;
+    color: #fff;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-family: inherit;
+    font-weight: 700;
+}
+
+.btn-reset-confirm:hover { background: #c0392b; }
+
+.reset-message {
+    margin: 8px 0 0;
+    font-size: 0.84rem;
+    font-weight: 600;
 }
 
 .hidden { display: none !important; }

@@ -2,8 +2,9 @@ import os
 import sqlite3
 from flask import Flask, request, jsonify, send_from_directory
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH  = os.path.join(BASE_DIR, 'phishing.db')
+BASE_DIR       = os.path.dirname(os.path.abspath(__file__))
+DB_PATH        = os.path.join(BASE_DIR, 'phishing.db')
+RESET_PASSWORD = os.environ.get('RESET_PASSWORD', 'gamemaster')
 
 app = Flask(__name__)
 
@@ -61,7 +62,7 @@ def submit_score():
     team_id = data.get('team_id')
     score   = data.get('score')
 
-    if not isinstance(team_id, int) or not isinstance(score, int) or not (0 <= score <= 2100):
+    if not isinstance(team_id, int) or not isinstance(score, int) or not (0 <= score <= 6900):
         return jsonify({'error': 'Invalid team_id or score'}), 400
 
     db = get_db()
@@ -99,14 +100,29 @@ def leaderboard():
     try:
         rows = db.execute('''
             SELECT name, total_score, play_count,
-                   CASE WHEN play_count > 0
-                        THEN ROUND(CAST(total_score AS REAL) / play_count)
-                        ELSE 0 END AS avg_score
+                   ROUND(CAST(total_score AS REAL) / play_count) AS avg_score
             FROM teams
+            WHERE play_count > 0
             ORDER BY total_score DESC
             LIMIT 25
         ''').fetchall()
         return jsonify([dict(r) for r in rows])
+    finally:
+        db.close()
+
+
+@app.route('/api/reset', methods=['POST'])
+def reset_leaderboard():
+    data = request.get_json(silent=True) or {}
+    if data.get('password') != RESET_PASSWORD:
+        return jsonify({'error': 'Incorrect password'}), 403
+
+    db = get_db()
+    try:
+        db.execute('DELETE FROM plays')
+        db.execute('DELETE FROM teams')
+        db.commit()
+        return jsonify({'success': True})
     finally:
         db.close()
 
