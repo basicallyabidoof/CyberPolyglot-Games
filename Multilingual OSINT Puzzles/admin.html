@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSINT Puzzles — Admin</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Password gate -->
+    <div id="admin-gate" class="screen">
+        <div class="login-box">
+            <h1>Gamemaster</h1>
+            <p class="tagline">Admin password required.</p>
+            <input type="password" id="admin-pw-input" placeholder="Password…" />
+            <button id="btn-admin-login">Unlock</button>
+            <a href="/" class="admin-link">← back to game</a>
+            <p id="admin-pw-err" class="reset-message err hidden">Incorrect password.</p>
+        </div>
+    </div>
+
+    <!-- Admin app -->
+    <div id="admin-app" class="screen hidden">
+        <div class="admin-container">
+            <div class="admin-header">
+                <h1>OSINT Puzzles · Admin</h1>
+                <a href="/">← back to game</a>
+            </div>
+
+            <div class="admin-grid">
+                <div class="admin-list">
+                    <button class="new-btn" id="btn-new-puzzle">+ New puzzle</button>
+                    <h2>Puzzles</h2>
+                    <div id="puzzle-list"></div>
+                </div>
+
+                <div class="admin-editor" id="editor">
+                    <h2 id="editor-title">Select or create a puzzle</h2>
+                    <div id="editor-form" class="hidden">
+                        <div class="field">
+                            <label>Title</label>
+                            <input type="text" id="e-title" />
+                        </div>
+                        <div class="field-row-3">
+                            <div class="field">
+                                <label>Category</label>
+                                <input type="text" id="e-category" placeholder="e.g. Geolocation" />
+                            </div>
+                            <div class="field">
+                                <label>Language</label>
+                                <input type="text" id="e-language" placeholder="e.g. Russian" />
+                            </div>
+                            <div class="field">
+                                <label>Difficulty</label>
+                                <select id="e-difficulty">
+                                    <option>Easy</option>
+                                    <option>Medium</option>
+                                    <option>Hard</option>
+                                    <option>Insane</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>Description / Question</label>
+                            <textarea id="e-description" placeholder="Pose the puzzle. Include flag format hint."></textarea>
+                        </div>
+                        <div class="field-row">
+                            <div class="field">
+                                <label>Flag (the correct answer)</label>
+                                <input type="text" id="e-flag" placeholder="flag{...}" />
+                            </div>
+                            <div class="field">
+                                <label>Points</label>
+                                <input type="number" id="e-points" value="100" min="1" />
+                            </div>
+                        </div>
+                        <div class="field checkbox-field">
+                            <input type="checkbox" id="e-case" />
+                            <label for="e-case" style="margin:0;text-transform:none;letter-spacing:0;font-size:0.85rem;">Flag is case-sensitive</label>
+                        </div>
+
+                        <div class="field">
+                            <label>Image (rendered inline)</label>
+                            <div class="upload-row">
+                                <input type="file" id="e-image-input" accept="image/*" />
+                                <button type="button" id="btn-upload-image">Upload</button>
+                                <span class="upload-status" id="image-status"></span>
+                            </div>
+                            <img id="image-preview" class="upload-preview hidden" />
+                            <input type="hidden" id="e-image-path" />
+                        </div>
+
+                        <div class="field">
+                            <label>Attachment file (downloadable)</label>
+                            <div class="upload-row">
+                                <input type="file" id="e-file-input" />
+                                <button type="button" id="btn-upload-file">Upload</button>
+                                <span class="upload-status" id="file-status"></span>
+                            </div>
+                            <input type="hidden" id="e-file-path" />
+                            <input type="hidden" id="e-file-name" />
+                        </div>
+
+                        <div class="field">
+                            <div class="hints-editor">
+                                <h3>CLUES</h3>
+                                <div id="hints-list"></div>
+                                <button type="button" class="add-hint-btn" id="btn-add-hint">+ Add clue</button>
+                            </div>
+                        </div>
+
+                        <div class="editor-actions">
+                            <button class="btn-save" id="btn-save">Save puzzle</button>
+                            <button class="btn-delete hidden" id="btn-delete">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script src="admin.js"></script>
+</body>
+</html>

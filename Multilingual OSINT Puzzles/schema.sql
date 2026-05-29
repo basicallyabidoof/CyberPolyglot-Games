@@ -1,0 +1,70 @@
+DROP TABLE IF EXISTS hint_unlocks;
+DROP TABLE IF EXISTS solves;
+DROP TABLE IF EXISTS attempts;
+DROP TABLE IF EXISTS hints;
+DROP TABLE IF EXISTS puzzles;
+DROP TABLE IF EXISTS users;
+
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    handle TEXT UNIQUE NOT NULL,
+    total_score INTEGER DEFAULT 0,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE puzzles (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    category TEXT NOT NULL DEFAULT 'OSINT',
+    language TEXT,
+    difficulty TEXT NOT NULL DEFAULT 'Easy',
+    description TEXT NOT NULL,
+    flag TEXT NOT NULL,
+    points INTEGER NOT NULL DEFAULT 100,
+    image_path TEXT,
+    file_path TEXT,
+    file_name TEXT,
+    case_sensitive INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE hints (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    puzzle_id INTEGER NOT NULL,
+    ordering INTEGER NOT NULL DEFAULT 1,
+    text TEXT NOT NULL,
+    cost INTEGER NOT NULL DEFAULT 25,
+    FOREIGN KEY (puzzle_id) REFERENCES puzzles (id) ON DELETE CASCADE
+);
+
+CREATE TABLE hint_unlocks (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    hint_id INTEGER NOT NULL,
+    unlocked_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, hint_id),
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+    FOREIGN KEY (hint_id) REFERENCES hints (id) ON DELETE CASCADE
+);
+
+CREATE TABLE solves (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    puzzle_id INTEGER NOT NULL,
+    points_awarded INTEGER NOT NULL,
+    solved_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, puzzle_id),
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+    FOREIGN KEY (puzzle_id) REFERENCES puzzles (id) ON DELETE CASCADE
+);
+
+CREATE TABLE attempts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    puzzle_id INTEGER NOT NULL,
+    guess TEXT NOT NULL,
+    correct INTEGER NOT NULL,
+    attempted_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+    FOREIGN KEY (puzzle_id) REFERENCES puzzles (id) ON DELETE CASCADE
+);

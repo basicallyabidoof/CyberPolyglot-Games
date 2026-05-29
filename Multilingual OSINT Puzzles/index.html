@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberPolyglot — Multilingual OSINT Puzzles</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="login-screen" class="screen">
+        <div class="login-box">
+            <h1>Multilingual OSINT</h1>
+            <p class="tagline">Capture the flag. In any language.</p>
+            <input type="text" id="handle-input" placeholder="Agent handle…" />
+            <button id="btn-login">Enter the Arena</button>
+            <button id="btn-leaderboard-login" class="btn-secondary">🏆 View Leaderboard</button>
+            <a href="/admin" class="admin-link">admin →</a>
+        </div>
+    </div>
+
+    <div id="board-screen" class="screen hidden">
+        <header class="board-header">
+            <div class="header-left">
+                <h1>OSINT Arena</h1>
+                <div class="status">Agent: <span id="agent-handle"></span> · Score: <span id="agent-score">0</span> · Solved: <span id="agent-solves">0</span></div>
+            </div>
+            <div class="header-right">
+                <button id="btn-leaderboard">Leaderboard</button>
+                <button id="btn-logout" class="btn-secondary">Logout</button>
+            </div>
+        </header>
+
+        <div class="board-toolbar">
+            <input type="text" id="search-puzzles" placeholder="Search puzzles…" />
+            <select id="filter-category"><option value="">All categories</option></select>
+            <select id="filter-difficulty">
+                <option value="">All difficulties</option>
+                <option>Easy</option>
+                <option>Medium</option>
+                <option>Hard</option>
+                <option>Insane</option>
+            </select>
+            <label class="toggle"><input type="checkbox" id="filter-unsolved"> Hide solved</label>
+        </div>
+
+        <div id="puzzle-grid" class="puzzle-grid"></div>
+    </div>
+
+    <!-- Puzzle detail modal -->
+    <div id="puzzle-modal" class="modal hidden">
+        <div class="modal-content puzzle-modal-content">
+            <span class="close-btn" id="close-puzzle">&times;</span>
+            <div class="puzzle-meta">
+                <span id="pm-category" class="chip"></span>
+                <span id="pm-language" class="chip chip-lang"></span>
+                <span id="pm-difficulty" class="chip"></span>
+                <span id="pm-points" class="chip chip-points"></span>
+            </div>
+            <h2 id="pm-title"></h2>
+            <p id="pm-description" class="puzzle-description"></p>
+
+            <div id="pm-image-wrap" class="puzzle-image-wrap hidden">
+                <img id="pm-image" alt="puzzle evidence" />
+            </div>
+            <div id="pm-file-wrap" class="puzzle-file-wrap hidden">
+                <a id="pm-file-link" href="#" target="_blank" rel="noopener">
+                    📎 <span id="pm-file-name"></span>
+                </a>
+            </div>
+
+            <div class="hints-section">
+                <h3>Clues <span class="hints-help">(each reveal reduces your reward)</span></h3>
+                <div id="pm-hints"></div>
+            </div>
+
+            <div class="submit-section">
+                <label for="flag-input">Submit flag</label>
+                <div class="submit-row">
+                    <input type="text" id="flag-input" placeholder="flag{...}" autocomplete="off" />
+                    <button id="btn-submit-flag">Submit</button>
+                </div>
+                <p id="submit-feedback" class="submit-feedback hidden"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaderboard modal -->
+    <div id="leaderboard-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-btn" id="close-leaderboard">&times;</span>
+            <h2>🏆 Top Agents</h2>
+            <table id="leaderboard-table">
+                <thead><tr><th>Rank</th><th>Handle</th><th>Solves</th><th>Score</th></tr></thead>
+                <tbody id="leaderboard-body"></tbody>
+            </table>
+            <div class="reset-section">
+                <button id="btn-reset-toggle" class="btn-reset-toggle">🔒 Reset Leaderboard</button>
+                <div id="reset-form" class="reset-form hidden">
+                    <input type="password" id="reset-password" placeholder="Admin password…" />
+                    <button id="btn-reset-confirm" class="btn-reset-confirm">⚠ Confirm Reset</button>
+                </div>
+                <p id="reset-message" class="reset-message hidden"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
