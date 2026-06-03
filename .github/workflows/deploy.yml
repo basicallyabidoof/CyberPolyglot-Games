@@ -1,0 +1,32 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    name: SSH deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            set -e
+            VENV=/opt/cyberpolyglot-games/venv
+            cd /opt/cyberpolyglot-games
+
+            git pull origin main
+
+            $VENV/bin/pip install --quiet \
+              -r "Localized Phishing/requirements.txt" \
+              -r "Malware Analysis/requirements.txt" \
+              -r "Multilingual OSINT Puzzles/requirements.txt"
+
+            sudo systemctl restart lingua-game siem-game osint-game
+            echo "Deploy complete"
