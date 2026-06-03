@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Phish Catchers: Localized Edition — Player Guide</title>
+  <style>
+    :root {
+      --bg: #0f0a1a;
+      --surface: #18102a;
+      --border: #2d1f45;
+      --purple: #d2a8ff;
+      --purple-dim: #3a1f6b;
+      --text: #ddd6f0;
+      --muted: #7a6b99;
+      --red: #f85149;
+      --yellow: #e3b341;
+      --green: #39d353;
+      --orange: #ff8c42;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Courier New', Courier, monospace;
+      line-height: 1.7;
+      padding: 2rem 1rem;
+    }
+
+    .container { max-width: 780px; margin: 0 auto; }
+
+    header {
+      border: 1px solid var(--purple);
+      border-radius: 8px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      background: linear-gradient(135deg, #0f0a1a 0%, #1a0d2e 100%);
+      text-align: center;
+    }
+
+    header .label {
+      color: var(--purple);
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      color: var(--purple);
+      text-shadow: 0 0 20px var(--purple-dim);
+      margin-bottom: 0.5rem;
+    }
+
+    header .tagline {
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .play-btn {
+      display: inline-block;
+      margin-top: 1.5rem;
+      padding: 0.75rem 2rem;
+      background: var(--purple);
+      color: #000;
+      font-family: inherit;
+      font-weight: bold;
+      font-size: 1rem;
+      text-decoration: none;
+      border-radius: 6px;
+      letter-spacing: 0.05em;
+      transition: opacity 0.2s;
+    }
+
+    .play-btn:hover { opacity: 0.85; }
+
+    section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    section h2 {
+      color: var(--purple);
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    p { margin-bottom: 0.75rem; color: var(--text); }
+    p:last-child { margin-bottom: 0; }
+
+    ul, ol { padding-left: 1.5rem; margin-bottom: 0; }
+    li { margin-bottom: 0.4rem; color: var(--text); }
+
+    .red-flags {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+
+    @media (max-width: 500px) {
+      .red-flags { grid-template-columns: 1fr; }
+    }
+
+    .flag-card {
+      background: #1a0a0a;
+      border: 1px solid #4a1f1f;
+      border-radius: 6px;
+      padding: 0.75rem;
+      font-size: 0.9rem;
+    }
+
+    .flag-card .icon { font-size: 1.2rem; margin-bottom: 0.3rem; }
+    .flag-card strong { color: var(--red); display: block; margin-bottom: 0.2rem; }
+
+    .score-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .score-row:last-child { border-bottom: none; }
+    .score-label { flex: 1; }
+    .score-val { color: var(--yellow); font-weight: bold; min-width: 90px; text-align: right; }
+
+    .url-box {
+      background: #0f0a1a;
+      border: 1px solid var(--purple);
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      color: var(--purple);
+      text-align: center;
+      margin-top: 0.75rem;
+    }
+
+    .url-box a { color: var(--purple); text-decoration: none; }
+    .url-box a:hover { text-decoration: underline; }
+
+    .streak-badge {
+      display: inline-block;
+      background: #3a1f00;
+      color: var(--orange);
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      margin-right: 0.3rem;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <header>
+      <div class="label">CyberPolyglots &bull; Social Engineering Defense</div>
+      <h1>Phish Catchers: Localized Edition</h1>
+      <div class="tagline">Real messages. Real tricks. Every language, every culture.</div>
+      <a class="play-btn" href="https://lingua.cyberpolyglots.org" target="_blank" rel="noopener">Start Catching &rarr;</a>
+    </header>
+
+    <section>
+      <h2>What Is This Game?</h2>
+      <p>Phish Catchers: Localized Edition is a team-based phishing detection game that trains you to recognize social engineering attacks drawn from cultures and languages around the world. You will read emails and SMS messages — some legitimate, some malicious — and decide whether each one is a phishing attempt or the real thing.</p>
+      <p>The catch: phishing tactics look different depending on where the attacker is targeting. A Nigerian prince scam reads nothing like a fake WeChat security alert or a spoofed Brazilian bank SMS. This game teaches you to read the cultural subtext, not just the technical red flags.</p>
+    </section>
+
+    <section>
+      <h2>How to Reach the Game</h2>
+      <p>The game is hosted at:</p>
+      <div class="url-box">
+        <a href="https://lingua.cyberpolyglots.org" target="_blank" rel="noopener">https://lingua.cyberpolyglots.org</a>
+      </div>
+      <p style="margin-top:0.75rem;">No registration required. Enter a team name to join an existing team or create a new one. Teammates who enter the same team name will share a pooled score.</p>
+    </section>
+
+    <section>
+      <h2>How to Play</h2>
+      <ol>
+        <li><strong>Enter a team name.</strong> You can play solo (just use a unique name) or coordinate with teammates to use the same name and build a shared score.</li>
+        <li><strong>Read each message carefully.</strong> You will see either a full email interface (with From, To, Subject, Date, and body) or a simulated smartphone SMS conversation. Examine everything — sender address, domain, tone, grammar, urgency, and cultural context.</li>
+        <li><strong>Make your call.</strong> Click <em>Legitimate</em> or <em>Phishing</em> for each message. You cannot skip.</li>
+        <li><strong>Identify the red flag (bonus round).</strong> After a correct answer, a follow-up modal asks you to identify the single biggest red flag in the message. Select the correct one for a +50 point bonus.</li>
+        <li><strong>Keep your streak alive.</strong> Consecutive correct answers multiply your score. Breaking a streak resets the multiplier.</li>
+        <li><strong>Save and resume.</strong> Use the Save &amp; Quit button at any time. On your next visit, the game will ask whether you want to resume your previous session or start fresh.</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>Red Flags to Watch For</h2>
+      <div class="red-flags">
+        <div class="flag-card">
+          <div class="icon">&#128279;</div>
+          <strong>Fake domains</strong>
+          Lookalike URLs, extra subdomains, subtle misspellings (paypa1.com, amaz0n-security.net).
+        </div>
+        <div class="flag-card">
+          <div class="icon">&#9997;</div>
+          <strong>ESL grammar errors</strong>
+          Awkward phrasing, incorrect articles, or machine-translated cadence that doesn't match a professional sender.
+        </div>
+        <div class="flag-card">
+          <div class="icon">&#9889;</div>
+          <strong>Urgency &amp; pressure</strong>
+          "Your account will be closed in 24 hours", "Act now or lose access", manufactured deadlines.
+        </div>
+        <div class="flag-card">
+          <div class="icon">&#127758;</div>
+          <strong>Cultural tells</strong>
+          Incorrect honorifics, culturally inappropriate phrasing, holidays or events that don't match the supposed sender's region.
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Scoring Rules</h2>
+      <div class="score-row">
+        <span class="score-label">Correct classification (Legit or Phishing)</span>
+        <span class="score-val">Base points</span>
+      </div>
+      <div class="score-row">
+        <span class="score-label">Correct red flag identification (bonus)</span>
+        <span class="score-val">+50 pts</span>
+      </div>
+      <div class="score-row">
+        <span class="score-label">Consecutive correct streak</span>
+        <span class="score-val"><span class="streak-badge">x multiplier</span></span>
+      </div>
+      <div class="score-row">
+        <span class="score-label">Incorrect classification</span>
+        <span class="score-val">0 pts, streak resets</span>
+      </div>
+      <p style="margin-top:0.75rem; color: var(--muted); font-size:0.9rem;">Team scores are the sum of all teammates' individual scores. Coordinate with your team to maximize multiplier streaks.</p>
+    </section>
+
+    <section>
+      <h2>Level Structure</h2>
+      <p>There are <strong>16 levels</strong> in total. Each level presents one email or SMS. The game tracks your progress with a progress bar (Level X / 16). Difficulty and geographic diversity increase as you advance — early levels present obvious phishing attempts while later levels require careful cultural analysis to distinguish from legitimate messages.</p>
+    </section>
+
+    <section>
+      <h2>Team &amp; Leaderboard</h2>
+      <p>The leaderboard ranks teams by total pooled score. Individual player contributions are summed, so larger coordinated teams can outpace solo players — but every member needs to perform to keep the streak multiplier alive. The leaderboard is visible from the main game screen at any time.</p>
+    </section>
+
+    <section>
+      <h2>Tips for New Players</h2>
+      <ul>
+        <li>Read the sender address, not just the display name — attackers often set a friendly display name while the actual address is nonsense.</li>
+        <li>Hover over or carefully read any links in the email body before deciding.</li>
+        <li>Legitimate organizations rarely demand immediate action via email or SMS.</li>
+        <li>If a message is in a language you don't recognize, that itself is a signal — think about who the sender claims to be and whether the language makes sense.</li>
+        <li>The streak multiplier is worth protecting. When in doubt, slow down rather than guessing.</li>
+      </ul>
+    </section>
+
+    <footer>
+      CyberPolyglots &bull; <a href="https://lingua.cyberpolyglots.org" style="color: var(--purple);">lingua.cyberpolyglots.org</a>
+    </footer>
+
+  </div>
+</body>
+</html>
