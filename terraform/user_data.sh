@@ -23,7 +23,7 @@ chown -R ec2-user:ec2-user "$REPO_DIR"
 echo "==> Creating virtual environment"
 python3 -m venv "$VENV"
 "$VENV/bin/pip" install --upgrade pip
-"$VENV/bin/pip" install flask flask-cors gunicorn certbot certbot-dns-route53
+"$VENV/bin/pip" install flask flask-cors gunicorn certbot certbot-nginx certbot-dns-route53
 
 # ── Shared env file (RESET_PASSWORD for all games) ───────────────────────────
 echo "==> Writing environment config"
@@ -47,6 +47,12 @@ mkdir -p uploads && chown ec2-user:ec2-user uploads
 # call it directly so gunicorn starts with an initialised DB
 cd "$REPO_DIR/Localized Phishing"
 "$VENV/bin/python" -c "from app import init_db, DB_PATH; import os; init_db() if not os.path.exists(DB_PATH) else None"
+
+# Fix ownership — DBs are created by root above; gunicorn runs as ec2-user and needs write access
+chown ec2-user:ec2-user \
+  "$REPO_DIR/Localized Phishing/phishing.db" \
+  "$REPO_DIR/Malware Analysis/siem.db" \
+  "$REPO_DIR/Multilingual OSINT Puzzles/osint.db"
 
 # ── Systemd services ──────────────────────────────────────────────────────────
 echo "==> Creating systemd services"

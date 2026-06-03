@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multilingual OSINT Puzzles — Player Guide</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --border: #30363d;
+      --green: #39d353;
+      --green-dim: #1a6b2a;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Courier New', Courier, monospace;
+      line-height: 1.7;
+      padding: 2rem 1rem;
+    }
+
+    .container { max-width: 780px; margin: 0 auto; }
+
+    header {
+      border: 1px solid var(--green);
+      border-radius: 8px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      background: linear-gradient(135deg, #0d1117 0%, #0f2d1a 100%);
+      text-align: center;
+    }
+
+    header .label {
+      color: var(--green);
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      color: var(--green);
+      text-shadow: 0 0 20px var(--green-dim);
+      margin-bottom: 0.5rem;
+    }
+
+    header .tagline {
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .play-btn {
+      display: inline-block;
+      margin-top: 1.5rem;
+      padding: 0.75rem 2rem;
+      background: var(--green);
+      color: #000;
+      font-family: inherit;
+      font-weight: bold;
+      font-size: 1rem;
+      text-decoration: none;
+      border-radius: 6px;
+      letter-spacing: 0.05em;
+      transition: opacity 0.2s;
+    }
+
+    .play-btn:hover { opacity: 0.85; }
+
+    section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    section h2 {
+      color: var(--green);
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    p { margin-bottom: 0.75rem; color: var(--text); }
+    p:last-child { margin-bottom: 0; }
+
+    ul, ol {
+      padding-left: 1.5rem;
+      margin-bottom: 0;
+    }
+
+    li { margin-bottom: 0.4rem; color: var(--text); }
+
+    .chip {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      margin-right: 0.4rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .chip-easy   { background: #1a6b2a; color: #7ee787; }
+    .chip-medium { background: #5a3e00; color: #e3b341; }
+    .chip-hard   { background: #4a1f1f; color: #f85149; }
+    .chip-insane { background: #2d1f4a; color: #d2a8ff; }
+
+    .url-box {
+      background: #0d1117;
+      border: 1px solid var(--green);
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      color: var(--green);
+      text-align: center;
+      margin-top: 0.75rem;
+    }
+
+    .url-box a { color: var(--green); text-decoration: none; }
+    .url-box a:hover { text-decoration: underline; }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <header>
+      <div class="label">CyberPolyglots &bull; OSINT Arena</div>
+      <h1>Multilingual OSINT Puzzles</h1>
+      <div class="tagline">Capture the flag. In any language.</div>
+      <a class="play-btn" href="https://osint.cyberpolyglots.org" target="_blank" rel="noopener">Enter the Arena &rarr;</a>
+    </header>
+
+    <section>
+      <h2>What Is This Game?</h2>
+      <p>Multilingual OSINT Puzzles is a CTF-style (Capture the Flag) open-source intelligence challenge platform built for the global cybersecurity community. Every puzzle is grounded in real-world OSINT tradecraft — researching people, domains, images, social media, and more — but the twist is that clues and targets are drawn from a wide range of languages and cultural contexts.</p>
+      <p>Whether you read Arabic, Spanish, Mandarin, or only English, you will encounter evidence that demands creative thinking beyond your native language. That is the point: modern threats don't stay in one language, and neither should your skills.</p>
+    </section>
+
+    <section>
+      <h2>How to Reach the Game</h2>
+      <p>The game is hosted at:</p>
+      <div class="url-box">
+        <a href="https://osint.cyberpolyglots.org" target="_blank" rel="noopener">https://osint.cyberpolyglots.org</a>
+      </div>
+      <p style="margin-top:0.75rem;">No account registration required. Enter any agent handle (your display name) on the landing screen to begin.</p>
+    </section>
+
+    <section>
+      <h2>How to Play</h2>
+      <ol>
+        <li><strong>Choose an agent handle.</strong> This is your identifier on the leaderboard. Pick something memorable.</li>
+        <li><strong>Browse the puzzle board.</strong> Puzzles are displayed as a grid. You can filter by category, difficulty, or search by keyword. Toggle the "hide solved" switch to keep your board tidy as you progress.</li>
+        <li><strong>Open a puzzle.</strong> Each puzzle card shows the category, language, difficulty, and point value. Read the description carefully — it contains your mission briefing.</li>
+        <li><strong>Investigate.</strong> Use publicly available tools and resources to find the answer. No hacking, no private data — pure OSINT.</li>
+        <li><strong>Submit a flag.</strong> All answers are formatted as <code>flag{your_answer}</code>. Type it into the submission field and confirm.</li>
+        <li><strong>Use clues sparingly.</strong> Each puzzle may have clues available. Revealing a clue reduces your point reward for that puzzle, so try to go flag-first.</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>Difficulty Levels</h2>
+      <p>
+        <span class="chip chip-easy">Easy</span>
+        <span class="chip chip-medium">Medium</span>
+        <span class="chip chip-hard">Hard</span>
+        <span class="chip chip-insane">Insane</span>
+      </p>
+      <ul>
+        <li><strong>Easy</strong> — Good starting point. Fundamental OSINT techniques, minimal language barrier.</li>
+        <li><strong>Medium</strong> — Requires combining multiple sources or working with non-English content.</li>
+        <li><strong>Hard</strong> — Deep dives, obscure sources, multi-step inference chains.</li>
+        <li><strong>Insane</strong> — Maximum difficulty. Expect to be humbled.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Scoring Rules</h2>
+      <ul>
+        <li>Each puzzle has a fixed point value based on its difficulty.</li>
+        <li>Revealing a clue reduces the reward for that puzzle — the more clues used, the fewer points you earn.</li>
+        <li>First-blood bonuses may apply for the first solver of a puzzle.</li>
+        <li>Your total score and solve count are both tracked on the leaderboard.</li>
+        <li>There is no time penalty — take as long as you need.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Leaderboard</h2>
+      <p>The leaderboard ranks agents by solve count first, then by total score. It is visible to all players at any time from the puzzle board — click the leaderboard button in the top bar.</p>
+    </section>
+
+    <section>
+      <h2>Community &amp; Code of Conduct</h2>
+      <ul>
+        <li>Do not share flags publicly — it spoils the challenge for others.</li>
+        <li>All OSINT must use only publicly available information.</li>
+        <li>Play fair: no scripted brute-forcing of the flag submission system.</li>
+        <li>This game is part of the CyberPolyglots mission to build a global, multilingual infosec community. Respect all languages and cultures represented in the puzzles.</li>
+      </ul>
+    </section>
+
+    <footer>
+      CyberPolyglots &bull; <a href="https://osint.cyberpolyglots.org" style="color: var(--accent);">osint.cyberpolyglots.org</a>
+    </footer>
+
+  </div>
+</body>
+</html>
