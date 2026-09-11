@@ -10,9 +10,18 @@
     --ok: #3fb950;
     --warn: #e3a816;
     --bad: #f85149;
+    --ok-strong: #238636;
+    --ok-strong-hover: #2ea043;
+    --accent-strong: #1f6feb;
+    --accent-strong-hover: #388bfd;
+    --bad-strong: #da3633;
 }
 
 * { box-sizing: border-box; }
+button {
+    transition: background-color 0.15s ease, border-color 0.15s ease,
+                color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
 body, html {
     margin: 0;
     padding: 0;
@@ -67,7 +76,7 @@ body, html {
 }
 #btn-login {
     width: 100%;
-    background-color: #238636;
+    background-color: var(--ok-strong);
     color: white;
     border: none;
     padding: 11px 16px;
@@ -76,7 +85,7 @@ body, html {
     font-family: inherit;
     font-weight: bold;
 }
-#btn-login:hover { background-color: #2ea043; }
+#btn-login:hover { background-color: var(--ok-strong-hover); }
 
 .btn-secondary {
     display: block;
@@ -122,7 +131,7 @@ body, html {
 
 .header-right { display: flex; gap: 10px; }
 #btn-leaderboard {
-    background-color: #1f6feb;
+    background-color: var(--accent-strong);
     color: white;
     border: none;
     padding: 8px 16px;
@@ -130,7 +139,7 @@ body, html {
     cursor: pointer;
     font-family: inherit;
 }
-#btn-leaderboard:hover { background-color: #388bfd; }
+#btn-leaderboard:hover { background-color: var(--accent-strong-hover); }
 #btn-logout { width: auto; margin: 0; padding: 8px 14px; }
 
 .board-toolbar {
@@ -168,17 +177,28 @@ body, html {
     border-radius: 8px;
     padding: 16px;
     cursor: pointer;
-    transition: border-color 0.15s, transform 0.15s;
+    transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s, background-color 0.15s;
     display: flex;
     flex-direction: column;
     gap: 10px;
     position: relative;
 }
-.puzzle-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.puzzle-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+    background-color: var(--panel-2);
+}
+.puzzle-card:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-color: var(--accent);
+}
 .puzzle-card.solved {
     border-color: var(--ok);
     background-color: rgba(63, 185, 80, 0.06);
 }
+.puzzle-card.solved:hover { background-color: rgba(63, 185, 80, 0.1); }
 .puzzle-card.solved::after {
     content: "✓ SOLVED";
     position: absolute;
@@ -205,14 +225,16 @@ body, html {
     padding: 3px 9px;
     border-radius: 12px;
     font-size: 0.72rem;
+    font-weight: 600;
     letter-spacing: 0.04em;
+    transition: background-color 0.15s, border-color 0.15s;
 }
-.chip-lang { color: var(--accent-2); border-color: rgba(163, 113, 247, 0.4); }
-.chip-points { color: var(--warn); border-color: rgba(227, 168, 22, 0.4); font-weight: bold; }
-.chip-diff-easy { color: var(--ok); border-color: rgba(63, 185, 80, 0.4); }
-.chip-diff-medium { color: var(--warn); border-color: rgba(227, 168, 22, 0.4); }
-.chip-diff-hard { color: var(--bad); border-color: rgba(248, 81, 73, 0.4); }
-.chip-diff-insane { color: #ff7b72; border-color: #ff7b72; }
+.chip-lang { color: var(--accent-2); background-color: rgba(163, 113, 247, 0.08); border-color: rgba(163, 113, 247, 0.4); }
+.chip-points { color: var(--warn); background-color: rgba(227, 168, 22, 0.08); border-color: rgba(227, 168, 22, 0.4); font-weight: bold; }
+.chip-diff-easy { color: var(--ok); background-color: rgba(63, 185, 80, 0.08); border-color: rgba(63, 185, 80, 0.4); }
+.chip-diff-medium { color: var(--warn); background-color: rgba(227, 168, 22, 0.08); border-color: rgba(227, 168, 22, 0.4); }
+.chip-diff-hard { color: var(--bad); background-color: rgba(248, 81, 73, 0.08); border-color: rgba(248, 81, 73, 0.4); }
+.chip-diff-insane { color: #ff7b72; background-color: rgba(255, 123, 114, 0.08); border-color: #ff7b72; }
 
 .puzzle-card .footer {
     margin-top: auto;
@@ -233,6 +255,7 @@ body, html {
     align-items: center;
     z-index: 50;
     padding: 20px;
+    animation: modal-backdrop-in 0.15s ease-out;
 }
 .modal-content {
     background-color: var(--panel);
@@ -244,6 +267,15 @@ body, html {
     max-height: 90vh;
     overflow-y: auto;
     position: relative;
+    animation: modal-content-in 0.18s ease-out;
+}
+@keyframes modal-backdrop-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes modal-content-in {
+    from { opacity: 0; transform: translateY(-10px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
 }
 .puzzle-modal-content { width: 720px; }
 .modal-content h2 { color: var(--accent); margin: 8px 0 14px; }
@@ -342,7 +374,7 @@ body, html {
     font-size: 0.95rem;
 }
 #btn-submit-flag {
-    background-color: #238636;
+    background-color: var(--ok-strong);
     color: white;
     border: none;
     padding: 10px 20px;
@@ -351,7 +383,7 @@ body, html {
     font-family: inherit;
     font-weight: bold;
 }
-#btn-submit-flag:hover { background-color: #2ea043; }
+#btn-submit-flag:hover { background-color: var(--ok-strong-hover); }
 
 .submit-feedback {
     margin-top: 12px;
@@ -415,7 +447,7 @@ th { background-color: var(--bg); color: var(--muted); }
     width: 150px;
 }
 .btn-reset-confirm {
-    background: #da3633;
+    background: var(--bad-strong);
     color: white;
     border: none;
     padding: 6px 14px;
@@ -462,7 +494,7 @@ th { background-color: var(--bg); color: var(--muted); }
 .admin-list h2 { margin: 0 0 12px; font-size: 1rem; color: var(--muted); letter-spacing: 0.05em; }
 .admin-list .new-btn {
     width: 100%;
-    background-color: #238636;
+    background-color: var(--ok-strong);
     color: white;
     border: none;
     padding: 9px;
@@ -472,7 +504,7 @@ th { background-color: var(--bg); color: var(--muted); }
     font-weight: bold;
     margin-bottom: 10px;
 }
-.admin-list .new-btn:hover { background-color: #2ea043; }
+.admin-list .new-btn:hover { background-color: var(--ok-strong-hover); }
 .admin-list .puzzle-row {
     padding: 9px 11px;
     border: 1px solid var(--border);
@@ -583,7 +615,7 @@ th { background-color: var(--bg); color: var(--muted); }
     border-top: 1px solid var(--border);
 }
 .btn-save {
-    background-color: #238636;
+    background-color: var(--ok-strong);
     color: white;
     border: none;
     padding: 10px 22px;
@@ -592,7 +624,7 @@ th { background-color: var(--bg); color: var(--muted); }
     font-family: inherit;
     font-weight: bold;
 }
-.btn-save:hover { background-color: #2ea043; }
+.btn-save:hover { background-color: var(--ok-strong-hover); }
 .btn-delete {
     background-color: var(--bad);
     color: white;

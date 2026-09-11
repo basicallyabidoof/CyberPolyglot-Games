@@ -47,10 +47,41 @@ def generate_zero_width_stego_file():
     return f'/uploads/{fname}', fname
 
 
+def generate_morse_intercept_file():
+    """Create a fake SIGINT intercept log containing a Morse-coded payload.
+
+    Encoding scheme (documented for fair hinting):
+      - Standard International Morse code; letters within a word are separated
+        by a single space.
+      - " / " marks a word break in the transmission.
+      - The decoded phrase, with word breaks rewritten as underscores, is the
+        content of the puzzle's flag.
+    Returns the public URL path and filename to reference as a puzzle attachment.
+    """
+    os.makedirs(UPLOAD_DIR, exist_ok=True)
+    morse = "-. ..- -- -... . .-. ... / ... - .- - .. --- -."
+    doc = (
+        "SIGINT INTERCEPT LOG #4471\n"
+        "Frequency: 6840 kHz USB\n"
+        "Timestamp: 2026-02-14 23:41 UTC\n"
+        "Signal type: Shortwave, numbers-station-style transmission\n"
+        "Analyst notes: Repeating callsign tone, followed by a short plaintext "
+        "payload keyed in Morse. Callsign omitted below; payload preserved as received.\n\n"
+        "Raw transmission (payload only):\n\n"
+        f"{morse}\n\n"
+        "End of log.\n"
+    )
+    fname = 'sigint_intercept.txt'
+    with open(os.path.join(UPLOAD_DIR, fname), 'w', encoding='utf-8') as f:
+        f.write(doc)
+    return f'/uploads/{fname}', fname
+
+
 # Each puzzle: title, category, language, difficulty, description, flag, points,
 # case_sensitive, optional image_path / file_path / file_name, and hints [(text, cost)].
 def build_puzzles():
     stego_path, stego_name = generate_zero_width_stego_file()
+    morse_path, morse_name = generate_morse_intercept_file()
 
     return [
         # ---------------- Original seed set ----------------
@@ -317,6 +348,83 @@ def build_puzzles():
             'hints': [
                 ('Open the file in a hex editor or a script — the visible text is a decoy. Look for U+200B / U+200C runs.', 100),
                 ('Map the zero-width run to bits, group into bytes (MSB first), and ASCII-decode. The payload sits right after the word "Verified".', 180),
+            ],
+        },
+
+        # ---------------- New additions ----------------
+        {
+            'title': 'Cà Phê Comment Thread',
+            'category': 'Language ID', 'language': 'Vietnamese', 'difficulty': 'Easy',
+            'description': (
+                "A comment on a leaked forum thread reads: «Chào bạn, cà phê sữa đá ngon quá!» "
+                "Identify the language it is written in. "
+                "Flag format: flag{language_lowercase}"
+            ),
+            'flag': 'flag{vietnamese}', 'points': 100,
+            'hints': [
+                ('The heavy stacking of tone marks over Latin letters, plus the letter đ, narrows this to one Southeast Asian language.', 25),
+                ('"cà phê sữa đá" is iced milk coffee — a signature Vietnamese drink order.', 40),
+            ],
+        },
+        {
+            'title': 'Green Cross, Blue Sea',
+            'category': 'Geolocation', 'language': 'Greek', 'difficulty': 'Easy',
+            'description': (
+                "A tourist photo shows a whitewashed storefront with a sign reading «ΦΑΡΜΑΚΕΙΟ» under a "
+                "backlit green cross. Identify the country where this photo was most likely taken. "
+                "Flag format: flag{country_lowercase}"
+            ),
+            'flag': 'flag{greece}', 'points': 100,
+            'hints': [
+                ('The script is the Greek alphabet in uppercase — this narrows it to one country and its diaspora.', 25),
+                ('ΦΑΡΜΑΚΕΙΟ means "pharmacy"; the backlit green cross is a common storefront marker there too, but the lettering seals it.', 45),
+            ],
+        },
+        {
+            'title': 'Tishrei on the Headstone',
+            'category': 'Calendars', 'language': 'Hebrew', 'difficulty': 'Medium',
+            'description': (
+                "A genealogy record transcribes a headstone inscription as «ה' תשרי תשפ\"ד» — the 5th of "
+                "Tishrei, year תשפ\"ד (5784) on the Hebrew calendar. Give the Gregorian (CE) year this date "
+                "falls in. "
+                "Flag format: flag{YYYY}"
+            ),
+            'flag': 'flag{2023}', 'points': 200,
+            'hints': [
+                ('Tishrei is the 1st month of the Hebrew civil year and always falls in the (northern) autumn.', 45),
+                ('For dates in Tishrei through Tevet, Gregorian year = Hebrew year minus 3761. 5784 - 3761 = 2023.', 80),
+            ],
+        },
+        {
+            'title': 'The Silent Dot',
+            'category': 'Attribution', 'language': 'Turkish', 'difficulty': 'Medium',
+            'description': (
+                "A leaked auth log shows a login attempt for username \"ISPARTA\" repeatedly failing a "
+                "case-insensitive match against the stored account \"İSPARTA\", even though a human would "
+                "call them the same word. Which language's alphabet — and its dotted/dotless I distinction — "
+                "explains the mismatch? "
+                "Flag format: flag{language_lowercase}"
+            ),
+            'flag': 'flag{turkish}', 'points': 225,
+            'hints': [
+                ('Most Latin alphabets treat I and i as a simple pair. This one has four I-related letters instead of two.', 50),
+                ('In Turkish casing rules, "İ".lower() is "i" and "I".lower() is "ı" — a classic locale bug (and OSINT tell) when software assumes English casing.', 90),
+            ],
+        },
+        {
+            'title': 'Numbers Station',
+            'category': 'Encoding', 'language': 'n/a', 'difficulty': 'Hard',
+            'description': (
+                "Download the attached SIGINT intercept log. Buried in the raw transmission line is a "
+                "short payload in International Morse code. Letters are space-separated, and \" / \" marks "
+                "a word break. Decode it and join the words with an underscore. "
+                "Flag format: flag{word_word}"
+            ),
+            'flag': 'flag{numbers_station}', 'points': 375,
+            'file_path': morse_path, 'file_name': morse_name,
+            'hints': [
+                ('Standard International Morse: dots and dashes per letter, single spaces between letters, "/" between words.', 70),
+                ('The two decoded words name a real, well-documented shortwave spying phenomenon that OSINT hobbyists still log frequencies for today.', 130),
             ],
         },
     ]

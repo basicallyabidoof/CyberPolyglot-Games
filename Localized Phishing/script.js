@@ -716,6 +716,74 @@ const messages = [
         body: "NZ Post: Your parcel NZP993847261 is out for delivery today. Track at nzpost.co.nz/track",
         isPhish: false,
         explanation: "Legitimate! Real NZ Post delivery notifications include a valid tracking number and link only to nzpost.co.nz — New Zealand's official postal service domain. There is no payment request, no urgency, and no request for personal information. This is exactly how a legitimate delivery notification should look."
+    },
+
+    // --- NEW SCENARIOS (LOCALIZED EXPANSION) ---
+    {
+        type: 'email',
+        sender: "cs@cj-logistics-delivery.com",
+        recipient: "user@example.kr",
+        subject: "[CJ대한통운] 배송 지연 안내 - 관세 미납",
+        date: "2024년 5월 20일 월요일",
+        body: "고객님,\n\n고객님의 택배가 관세 미납으로 인해 배송이 보류되었습니다.\n\n아래 링크를 클릭하여 관세 3,500원을 결제하시면 즉시 배송이 재개됩니다. 24시간 이내에 처리하지 않으시면 택배는 반송됩니다.\n\nhttp://cj-logistics-delivery.com/pay\n\nCJ대한통운 고객센터",
+        isPhish: true,
+        explanation: "Phishing! CJ Logistics' real domain is cjlogistics.com — 'cj-logistics-delivery.com' is a fake look-alike. This small prepaid-customs-fee scam is extremely common in South Korea, exploiting the country's heavy reliance on online shopping. The 24-hour deadline threatening to return the package is a pressure tactic; legitimate courier customs fees are collected on delivery, never through a prepaid SMS or email link.",
+        redFlags: [
+            { text: "Fake domain — CJ Logistics uses cjlogistics.com, not cj-logistics-delivery.com", correct: true },
+            { text: "CJ Logistics never charges customs fees on deliveries", correct: false },
+            { text: "The fee amount (3,500원) is unusually specific", correct: false },
+            { text: "Korean couriers never send delivery notices by email, only SMS", correct: false }
+        ]
+    },
+    {
+        type: 'email',
+        sender: "noreply@github.com",
+        recipient: "user@example.com",
+        subject: "New sign-in to your account",
+        date: "Wednesday, 22 May",
+        body: "Hi there,\n\nWe noticed a new sign-in to your GitHub account from a new device (Chrome on Windows) in Berlin, Germany.\n\nIf this was you, no action is needed. If you don't recognize this activity, please review your account security settings directly at github.com.\n\nThanks,\nThe GitHub Team",
+        isPhish: false,
+        explanation: "Legitimate! This is GitHub's standard new-device sign-in notice: the sender domain matches github.com, there's no embedded link demanding you 'verify' or 'confirm' credentials, and it explicitly says no action is needed if it was you. Directing users to check settings themselves at the known domain — rather than clicking a link in the email — is the safe pattern for this kind of alert."
+    },
+    {
+        type: 'sms',
+        from: "Correos",
+        senderNumber: "CORREOS",
+        timestamp: "Today 12:20 PM",
+        body: "Correos: Su paquete no pudo ser entregado por falta de pago de aduana. Pague 1,99€ aquí para reprogramar la entrega: correos-es.com/pagar",
+        isPhish: true,
+        explanation: "Smishing! Spain's postal service Correos operates at correos.es — 'correos-es.com' is a fake domain designed to look official by embedding 'es' into the name. This small customs/redelivery fee text is one of Spain's most common smishing formats. Real Correos delivery issues are resolved through the official Correos app or website, never through a prepaid SMS link.",
+        redFlags: [
+            { text: "Fake domain — Correos uses correos.es, not correos-es.com", correct: true },
+            { text: "Correos never charges customs fees on parcels", correct: false },
+            { text: "1,99€ is too small a fee to be believable", correct: false },
+            { text: "Correos never sends SMS messages in Spanish", correct: false }
+        ]
+    },
+    {
+        type: 'sms',
+        from: "Royal Mail",
+        senderNumber: "RMailUK",
+        timestamp: "Today 8:10 AM",
+        body: "Royal Mail: Your parcel RM2298471530GB is due for delivery today. Track progress at royalmail.com/track-your-item",
+        isPhish: false,
+        explanation: "Legitimate! Real Royal Mail delivery texts include a valid tracking number in Royal Mail's standard format and link only to royalmail.com. There's no fee request, no urgency, and no request for personal or banking information — just routine delivery information."
+    },
+    {
+        type: 'email',
+        sender: "billing@netflix-update-secure.com",
+        recipient: "member@example.com",
+        subject: "Your payment was declined",
+        date: "Thursday, 6 Jun",
+        body: "Hi,\n\nWe were unable to process your last payment. Your membership will be paused unless you update your payment details within 48 hours.\n\nUpdate now: http://netflix-update-secure.com/billing\n\nThe Netflix Team",
+        isPhish: true,
+        explanation: "Phishing! Netflix only emails from netflix.com — 'netflix-update-secure.com' is a fake domain that appends the word 'secure' to look reassuring. The 48-hour deadline threatening a paused membership is urgency pressure designed to rush a click. Genuine billing issues are always resolved by logging in directly at netflix.com, never through a link embedded in an email.",
+        redFlags: [
+            { text: "Fake domain — Netflix only emails from netflix.com", correct: true },
+            { text: "Netflix never pauses memberships for failed payments", correct: false },
+            { text: "48 hours is too short a grace period for billing issues", correct: false },
+            { text: "The greeting 'Hi' is too casual for Netflix", correct: false }
+        ]
     }
 ];
 
