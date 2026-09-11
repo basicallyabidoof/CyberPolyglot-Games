@@ -1,0 +1,11 @@
+SIGINT INTERCEPT LOG #4471
+Frequency: 6840 kHz USB
+Timestamp: 2026-02-14 23:41 UTC
+Signal type: Shortwave, numbers-station-style transmission
+Analyst notes: Repeating callsign tone, followed by a short plaintext payload keyed in Morse. Callsign omitted below; payload preserved as received.
+
+Raw transmission (payload only):
+
+-. ..- -- -... . .-. ... / ... - .- - .. --- -.
+
+End of log.

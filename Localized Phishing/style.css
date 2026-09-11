@@ -1,6 +1,7 @@
 :root {
     --bg: #f0f2f5;
     --surface: #ffffff;
+    --surface-alt: #f9f9f9;
     --primary: #2c3e50;
     --primary-dark: #1a252f;
     --legit: #27ae60;
@@ -13,6 +14,38 @@
     --info-bg: #e8f4f8;
     --info-border: #3498db;
     --bonus: #f39c12;
+
+    /* SMS phone mockup */
+    --sms-dark: #1c1c1e;
+    --sms-bubble: #e5e5ea;
+
+    /* Type badges */
+    --badge-email-bg: #dbeafe;
+    --badge-email-text: #1d4ed8;
+    --badge-sms-bg: #d1fae5;
+    --badge-sms-text: #065f46;
+
+    /* Elevation scale */
+    --shadow-sm: 0 2px 6px rgba(0,0,0,0.07);
+    --shadow-md: 0 6px 18px rgba(0,0,0,0.12);
+    --shadow-lg: 0 12px 34px rgba(0,0,0,0.18);
+
+    /* Radius scale */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-pill: 20px;
+
+    /* Spacing scale */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+
+    /* Motion */
+    --transition-fast: 0.15s ease;
+    --transition-base: 0.25s ease;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -37,28 +70,29 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: var(--primary);
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
     color: white;
-    padding: 14px 20px;
-    border-radius: 10px 10px 0 0;
+    padding: 16px 22px;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
     gap: 12px;
     flex-wrap: wrap;
+    box-shadow: var(--shadow-sm);
 }
 
 .header-left {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 4px;
 }
 
-header h1 { font-size: 1.2rem; }
+header h1 { font-size: 1.2rem; letter-spacing: 0.2px; }
 
 .team-name-display {
     font-size: 0.78rem;
     background: rgba(255,255,255,0.15);
-    border-radius: 20px;
+    border-radius: var(--radius-pill);
     padding: 2px 10px;
-    color: #d1fae5;
+    color: var(--badge-sms-bg);
     font-weight: 600;
     width: fit-content;
 }
@@ -67,64 +101,73 @@ header h1 { font-size: 1.2rem; }
     background: rgba(255,255,255,0.15);
     border: 1px solid rgba(255,255,255,0.3);
     color: white;
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     padding: 5px 10px;
     font-size: 1rem;
     cursor: pointer;
-    transition: background 0.15s;
+    transition: background var(--transition-fast), transform var(--transition-fast);
     line-height: 1;
 }
 
-.btn-leaderboard-header:hover { background: rgba(255,255,255,0.25); }
+.btn-leaderboard-header:hover { background: rgba(255,255,255,0.25); transform: translateY(-1px); }
+.btn-leaderboard-header:active { transform: scale(0.95); }
 
 .score-board {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 10px;
     font-weight: bold;
-    font-size: 1rem;
+    font-size: 0.95rem;
+}
+
+.score-board > span {
+    background: rgba(255,255,255,0.12);
+    padding: 4px 12px;
+    border-radius: var(--radius-pill);
 }
 
 .streak-display {
-    background: linear-gradient(135deg, #e67e22, #f39c12);
-    padding: 3px 10px;
-    border-radius: 20px;
+    background: linear-gradient(135deg, #e67e22, var(--bonus));
+    padding: 4px 12px;
+    border-radius: var(--radius-pill);
     font-size: 0.9rem;
+    box-shadow: 0 2px 8px rgba(243,156,18,0.4);
     animation: pulse 1s ease-in-out infinite alternate;
 }
 
 @keyframes pulse {
-    from { opacity: 0.85; }
-    to { opacity: 1; }
+    from { opacity: 0.85; transform: scale(1); }
+    to { opacity: 1; transform: scale(1.04); }
 }
 
 /* Progress bar */
 .progress-bar-wrap {
-    height: 4px;
+    height: 5px;
     background: #dde1e7;
+    overflow: hidden;
 }
 
 .progress-bar {
     height: 100%;
-    background: linear-gradient(90deg, #3498db, #27ae60);
-    transition: width 0.4s ease;
+    background: linear-gradient(90deg, var(--info-border), var(--legit));
+    transition: width 0.45s ease;
     width: 0%;
 }
 
 /* Main */
 main {
     background: var(--surface);
-    padding: 22px;
-    border-radius: 0 0 10px 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 24px;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    box-shadow: var(--shadow-md);
 }
 
 .instruction-panel {
     background: var(--info-bg);
-    padding: 13px 16px;
+    padding: 14px 18px;
     border-left: 4px solid var(--info-border);
-    border-radius: 4px;
-    margin-bottom: 18px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 20px;
     font-size: 0.95rem;
     line-height: 1.5;
 }
@@ -136,8 +179,8 @@ main {
 
 .type-badge {
     display: inline-block;
-    padding: 3px 12px;
-    border-radius: 20px;
+    padding: 4px 13px;
+    border-radius: var(--radius-pill);
     font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 1px;
@@ -145,25 +188,27 @@ main {
 }
 
 .type-email {
-    background: #dbeafe;
-    color: #1d4ed8;
+    background: var(--badge-email-bg);
+    color: var(--badge-email-text);
 }
 
 .type-sms {
-    background: #d1fae5;
-    color: #065f46;
+    background: var(--badge-sms-bg);
+    color: var(--badge-sms-text);
 }
 
 /* Email client */
 .email-client {
     border: 1px solid var(--border);
-    border-radius: 6px;
+    border-radius: var(--radius-md);
     margin-bottom: 20px;
     overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    animation: cardIn var(--transition-base);
 }
 
 .email-header {
-    background: #f9f9f9;
+    background: var(--surface-alt);
     padding: 14px 16px;
     border-bottom: 1px solid var(--border);
 }
@@ -183,18 +228,25 @@ main {
     font-size: 0.95rem;
 }
 
+/* Message card entrance */
+@keyframes cardIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 /* SMS Phone mockup */
 .sms-phone {
-    background: #1c1c1e;
+    background: var(--sms-dark);
     border-radius: 28px;
     max-width: 380px;
     margin: 0 auto 20px;
     overflow: hidden;
-    box-shadow: 0 12px 40px rgba(0,0,0,0.35), inset 0 0 0 1px rgba(255,255,255,0.08);
+    box-shadow: var(--shadow-lg), inset 0 0 0 1px rgba(255,255,255,0.08);
+    animation: cardIn var(--transition-base);
 }
 
 .sms-status-bar {
-    background: #1c1c1e;
+    background: var(--sms-dark);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -235,7 +287,7 @@ main {
 .sms-contact-name {
     font-size: 0.9rem;
     font-weight: 600;
-    color: #1c1c1e;
+    color: var(--sms-dark);
 }
 
 .sms-contact-number {
@@ -257,14 +309,15 @@ main {
 }
 
 .sms-bubble {
-    background: #e5e5ea;
-    color: #1c1c1e;
+    background: var(--sms-bubble);
+    color: var(--sms-dark);
     border-radius: 18px 18px 18px 4px;
     padding: 10px 14px;
     max-width: 85%;
     font-size: 0.92rem;
     line-height: 1.5;
     word-break: break-word;
+    box-shadow: var(--shadow-sm);
 }
 
 /* RTL languages: Arabic, Urdu, Hebrew — flip bubble tail to right */
@@ -277,24 +330,26 @@ main {
 /* Action buttons */
 .action-buttons {
     display: flex;
-    gap: 14px;
+    gap: 16px;
     justify-content: center;
-    margin-top: 4px;
+    margin-top: 8px;
 }
 
 .btn {
-    padding: 12px 28px;
+    padding: 13px 30px;
     font-size: 1rem;
     font-weight: 700;
     border: none;
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     color: white;
-    transition: background 0.18s, transform 0.1s;
+    box-shadow: var(--shadow-sm);
+    transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-.btn:active { transform: scale(0.97); }
-.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.btn:active:not(:disabled) { transform: scale(0.97); box-shadow: var(--shadow-sm); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
 
 .btn-legit { background: var(--legit); }
 .btn-legit:hover:not(:disabled) { background: var(--legit-dark); }
@@ -315,18 +370,30 @@ main {
     align-items: center;
     z-index: 1000;
     padding: 20px;
+    animation: fadeIn var(--transition-fast);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 .modal.hidden { display: none; }
 
 .modal-content {
-    background: white;
-    padding: 30px;
-    border-radius: 12px;
+    background: var(--surface);
+    padding: 32px;
+    border-radius: var(--radius-lg);
     max-width: 520px;
     width: 100%;
     text-align: center;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+    box-shadow: var(--shadow-lg);
+    animation: modalIn var(--transition-base);
+}
+
+@keyframes modalIn {
+    from { opacity: 0; transform: translateY(10px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .modal-content h2 {
@@ -347,11 +414,12 @@ main {
     background: var(--bonus);
     color: white;
     display: inline-block;
-    padding: 4px 14px;
-    border-radius: 20px;
+    padding: 5px 16px;
+    border-radius: var(--radius-pill);
     font-weight: 700;
     font-size: 0.9rem;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(243,156,18,0.35);
 }
 
 /* Red flag modal */
@@ -363,11 +431,12 @@ main {
     background: var(--legit);
     color: white;
     display: inline-block;
-    padding: 4px 14px;
-    border-radius: 20px;
+    padding: 5px 16px;
+    border-radius: var(--radius-pill);
     font-weight: 700;
     font-size: 0.85rem;
     margin-bottom: 10px;
+    box-shadow: 0 2px 8px rgba(39,174,96,0.35);
 }
 
 .redflag-subtitle {
@@ -386,18 +455,23 @@ main {
 .redflag-btn {
     background: #f5f7fa;
     border: 2px solid var(--border);
-    border-radius: 8px;
-    padding: 11px 16px;
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
     font-size: 0.9rem;
     text-align: left;
     cursor: pointer;
-    transition: background 0.15s, border-color 0.15s;
+    transition: background var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
     line-height: 1.4;
 }
 
 .redflag-btn:hover {
     background: #eaf0fb;
-    border-color: #3498db;
+    border-color: var(--info-border);
+    transform: translateX(2px);
+}
+
+.redflag-btn:active {
+    transform: translateX(2px) scale(0.99);
 }
 
 /* Game over screen */
@@ -430,7 +504,7 @@ main {
 .grade-badge {
     display: inline-block;
     border: 2px solid;
-    border-radius: 30px;
+    border-radius: var(--radius-pill);
     padding: 5px 20px;
     font-weight: 700;
     font-size: 1rem;
@@ -438,13 +512,14 @@ main {
 }
 
 .score-breakdown {
-    background: #f9f9f9;
-    border-radius: 8px;
-    padding: 14px 20px;
+    background: var(--surface-alt);
+    border-radius: var(--radius-md);
+    padding: 16px 20px;
     margin-bottom: 24px;
     max-width: 300px;
     margin-left: auto;
     margin-right: auto;
+    box-shadow: var(--shadow-sm);
 }
 
 .breakdown-row {
@@ -467,17 +542,19 @@ main {
 
 .btn-leaderboard-gameover {
     background: #2980b9;
-    padding: 12px 28px;
+    padding: 13px 28px;
     font-size: 1rem;
     font-weight: 700;
     border: none;
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     color: white;
-    transition: background 0.18s;
+    box-shadow: var(--shadow-sm);
+    transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-.btn-leaderboard-gameover:hover { background: #1f6fa8; }
+.btn-leaderboard-gameover:hover { background: #1f6fa8; transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.btn-leaderboard-gameover:active { transform: scale(0.97); }
 
 /* Team result card on game over */
 .team-result {
@@ -496,12 +573,13 @@ main {
 }
 
 .team-result-card {
-    background: linear-gradient(135deg, #1a3a5c, #2c3e50);
+    background: linear-gradient(135deg, #1a3a5c, var(--primary));
     color: white;
-    border-radius: 10px;
-    padding: 16px 20px;
+    border-radius: var(--radius-md);
+    padding: 18px 20px;
     max-width: 320px;
     margin: 0 auto;
+    box-shadow: var(--shadow-md);
 }
 
 .team-result-name {
@@ -549,14 +627,14 @@ main {
     color: var(--text-muted);
     font-size: 0.85rem;
     cursor: pointer;
-    padding: 4px 8px;
-    border-radius: 4px;
-    transition: color 0.15s, background 0.15s;
+    padding: 5px 10px;
+    border-radius: var(--radius-sm);
+    transition: color var(--transition-fast), background var(--transition-fast);
 }
 
 .btn-save-quit:hover {
     color: var(--text);
-    background: #f0f2f5;
+    background: var(--bg);
 }
 
 /* Resume modal */
@@ -573,14 +651,15 @@ main {
     padding: 11px 28px;
     font-size: 1rem;
     font-weight: 600;
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
-    transition: border-color 0.15s, color 0.15s;
+    transition: border-color var(--transition-fast), color var(--transition-fast), background var(--transition-fast);
 }
 
 .btn-start-fresh:hover {
     border-color: #aaa;
     color: var(--text);
+    background: var(--bg);
 }
 
 /* Team registration screen */
@@ -612,15 +691,16 @@ main {
     padding: 12px 14px;
     font-size: 1rem;
     border: 2px solid var(--border);
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     outline: none;
-    transition: border-color 0.15s;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
     text-align: center;
     font-family: inherit;
 }
 
 .team-input-wrap input:focus {
     border-color: var(--info-border);
+    box-shadow: 0 0 0 3px rgba(52,152,219,0.18);
 }
 
 .team-error {
@@ -661,8 +741,8 @@ main {
 }
 
 .leaderboard-table th {
-    background: #f0f2f5;
-    padding: 9px 12px;
+    background: var(--bg);
+    padding: 10px 12px;
     text-align: left;
     font-size: 0.78rem;
     text-transform: uppercase;
@@ -673,13 +753,14 @@ main {
 }
 
 .leaderboard-table td {
-    padding: 10px 12px;
+    padding: 11px 12px;
     border-bottom: 1px solid var(--border);
+    transition: background var(--transition-fast);
 }
 
 .leaderboard-table tr:last-child td { border-bottom: none; }
 
-.leaderboard-table tr:hover td { background: #f9f9f9; }
+.leaderboard-table tr:hover td { background: var(--surface-alt); }
 
 .leaderboard-own-row td {
     background: #eaf4ff !important;
@@ -705,15 +786,15 @@ main {
     background: transparent;
     color: var(--text-muted);
     border: 1px solid var(--border);
-    padding: 5px 14px;
-    border-radius: 6px;
+    padding: 6px 14px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     font-size: 0.8rem;
     font-family: inherit;
-    transition: color 0.2s, border-color 0.2s;
+    transition: color var(--transition-base), border-color var(--transition-base);
 }
 
-.btn-reset-toggle:hover { color: #e74c3c; border-color: #e74c3c; }
+.btn-reset-toggle:hover { color: var(--phish); border-color: var(--phish); }
 
 .reset-form {
     display: flex;
@@ -724,27 +805,36 @@ main {
 }
 
 .reset-form input[type="password"] {
-    padding: 6px 10px;
+    padding: 7px 10px;
     border: 1px solid var(--border);
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     font-family: inherit;
     font-size: 0.88rem;
     width: 150px;
+    transition: border-color var(--transition-fast);
+}
+
+.reset-form input[type="password"]:focus {
+    outline: none;
+    border-color: var(--info-border);
 }
 
 .btn-reset-confirm {
-    background: #e74c3c;
+    background: var(--phish);
     color: #fff;
     border: none;
-    padding: 6px 14px;
-    border-radius: 6px;
+    padding: 7px 14px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     font-size: 0.85rem;
     font-family: inherit;
     font-weight: 700;
+    transition: background var(--transition-fast), transform var(--transition-fast);
 }
 
-.btn-reset-confirm:hover { background: #c0392b; }
+.btn-reset-confirm:active { transform: scale(0.96); }
+
+.btn-reset-confirm:hover { background: var(--phish-dark); }
 
 .reset-message {
     margin: 8px 0 0;
@@ -777,16 +867,17 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.15s, background 0.15s;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    transition: transform var(--transition-fast), background var(--transition-fast);
+    box-shadow: var(--shadow-md);
 }
 .music-toggle:hover { background: var(--primary-dark); transform: scale(1.08); }
+.music-toggle:active { transform: scale(0.96); }
 .music-panel {
     width: 300px;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     overflow: hidden;
     display: none;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    box-shadow: var(--shadow-lg);
     border: 1px solid var(--border);
 }
 .music-panel.open { display: block; }
