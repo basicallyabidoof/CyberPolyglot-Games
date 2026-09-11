@@ -16,6 +16,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
+          passphrase: ${{ secrets.EC2_SSH_KEY_PASSPHRASE }}
           script: |
             set -e
             VENV=/opt/cyberpolyglot-games/venv
