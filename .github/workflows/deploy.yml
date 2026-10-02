@@ -22,7 +22,8 @@ jobs:
             VENV=/opt/cyberpolyglot-games/venv
             cd /opt/cyberpolyglot-games
 
-            git pull origin main
+            git fetch origin main
+            git reset --hard origin/main
 
             $VENV/bin/pip install --quiet \
               -r "Localized Phishing/requirements.txt" \
