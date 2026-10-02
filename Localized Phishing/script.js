@@ -784,6 +784,37 @@ const messages = [
             { text: "48 hours is too short a grace period for billing issues", correct: false },
             { text: "The greeting 'Hi' is too casual for Netflix", correct: false }
         ]
+    },
+    {
+        type: 'sms',
+        from: "ATAC Roma",
+        senderNumber: "+39 345 019 2277",
+        timestamp: "Today 9:14 AM",
+        body: "ATAC: Verbale ZTL non pagato - multa di 38€. Paga entro 48h per evitare il raddoppio: atac-pagamenti-online.net/verbale8842",
+        isPhish: true,
+        explanation: "Smishing! ATAC (Rome's public transport authority, which also enforces the city's ZTL — limited traffic zone) issues violation notices by official registered post, never by SMS with a payment link. The 48-hour deadline and threat that the fine will 'raddoppiare' (double) are urgency pressure tactics, and the link points to a generic .net domain rather than an official municipal address.",
+        redFlags: [
+            { text: "ZTL fines are mailed as official notices, never sent as SMS payment links", correct: true },
+            { text: "The fine amount (38€) is unusually specific", correct: false },
+            { text: "ATAC never issues ZTL fines", correct: false },
+            { text: "The message was sent in the morning", correct: false }
+        ]
+    },
+    {
+        type: 'email',
+        sender: "speakers@romhack-camp-badges.com",
+        recipient: "researcher@example.com",
+        subject: "RomHack Camp - Confirm Your Speaker Badge (Action Required)",
+        date: "Monday, 3 Aug",
+        body: "Dear Speaker,\n\nCongratulations, your talk has been accepted for RomHack Camp! To lock in your speaker badge and travel honorarium, please confirm your bank details for the transfer within 24 hours using the secure link below.\n\nWe look forward to seeing you in Rome.\n\nRomHack Camp Organizing Committee",
+        isPhish: true,
+        explanation: "Phishing! Legitimate conference organizers don't ask accepted speakers to submit bank details by email to 'confirm' a badge or honorarium — reimbursements are handled after the event through an invoice, not urgent pre-event verification. The 24-hour deadline and vague 'secure link' (instead of naming an actual submission system) are pressure tactics. This mirrors a real tactic nation-state actors have used against security researchers: a fake conference acceptance or collaboration offer as the hook to get a target to click or run something.",
+        redFlags: [
+            { text: "Request for bank details to 'confirm' a speaker badge is not how conference reimbursements work", correct: true },
+            { text: "The email mentions traveling to Rome", correct: false },
+            { text: "Conference acceptance emails always include a 24-hour deadline", correct: false },
+            { text: "The greeting 'Dear Speaker' is too generic", correct: false }
+        ]
     }
 ];
 

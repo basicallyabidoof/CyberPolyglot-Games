@@ -427,6 +427,38 @@ def build_puzzles():
                 ('The two decoded words name a real, well-documented shortwave spying phenomenon that OSINT hobbyists still log frequencies for today.', 130),
             ],
         },
+        {
+            'title': 'Marble and Espresso',
+            'category': 'Geolocation', 'language': 'Italian', 'difficulty': 'Easy',
+            'description': (
+                "A tourist photo shows a street-corner sign reading «FARMACIA» beside a green neon cross, "
+                "with a smaller plaque underneath reading «Aperto tutti i giorni». A street-numbering plate "
+                "on the wall reads «VIA DEI FORI IMPERIALI». Identify the country where this photo was most "
+                "likely taken. "
+                "Flag format: flag{country_lowercase}"
+            ),
+            'flag': 'flag{italy}', 'points': 100,
+            'hints': [
+                ('"FARMACIA" is pharmacy in Italian, Spanish, and Portuguese alike — the street name is the real giveaway.', 25),
+                ('"Via dei Fori Imperiali" is a specific, real street that runs past the Roman Forum and the Colosseum — it exists in exactly one city.', 50),
+            ],
+        },
+        {
+            'title': 'Hacker Holiday in Rome',
+            'category': 'Trivia', 'language': 'English', 'difficulty': 'Easy',
+            'description': (
+                "A photo from a security-conference afterparty shows a lanyard badge. The event name on it "
+                "is a portmanteau of the host city and the word \"hack\" — a single-track hacking conference "
+                "that runs annually in Rome. Its companion CTF/workshop side-event appends one more English "
+                "word meaning an outdoor meeting ground. Name that side-event. "
+                "Flag format: flag{word_word}"
+            ),
+            'flag': 'flag{romhack_camp}', 'points': 150,
+            'hints': [
+                ('The conference name itself is just the city name fused with "hack".', 30),
+                ('The side-event\'s second word is the same one used for a scouting or music-festival outdoor gathering — think "summer ___".', 60),
+            ],
+        },
     ]
 
 
